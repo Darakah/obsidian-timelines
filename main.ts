@@ -22,17 +22,17 @@ export default class TimelinesPlugin extends Plugin {
 
 	async onload() {
 		var _this = this;
-        // Load message
-        await this.loadSettings();
-        console.log('Loaded Timelines Plugin');
+		// Load message
+		await this.loadSettings();
+		console.log('Loaded Timelines Plugin');
 
-        this.addSettingTab(new TimelinesSettingTab(this.app, this));
+		this.addSettingTab(new TimelinesSettingTab(this.app, this));
 
-        this.addCommand({
-            id: "create-timeline",
-            name: "Create Timeline",
-            callback: () => this.addTimeline()
-        });
+		this.addCommand({
+			id: "create-timeline",
+			name: "Create Timeline",
+			callback: () => this.addTimeline()
+		});
 	}
 
 	onunload() {
@@ -75,9 +75,9 @@ export default class TimelinesPlugin extends Plugin {
 
 		for(let i=0; i<file_list.length; i++){
 			// Convert into HTML element 
-        	let text = document.createElement('div')
-        	text.innerHTML = await this.app.vault.read(file_list[i]);
-        	// Use HTML parser to find the desired elements
+			let text = document.createElement('div')
+			text.innerHTML = await this.app.vault.read(file_list[i]);
+			// Use HTML parser to find the desired elements
 			let note_info = text.querySelector("span[class='ob-timelines']");
 			// if no ob-timelines class
 			if(!(note_info instanceof HTMLElement)){
@@ -214,5 +214,6 @@ class TimelinesSettingTab extends PluginSettingTab {
 					this.plugin.settings.DEFAULT_SORT_DIRECTION = value;
 					await this.plugin.saveSettings();
 				});
+            })
 	}
 }
