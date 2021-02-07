@@ -114,12 +114,12 @@ export default class TimelinesPlugin extends Plugin {
 		for (let i = 0; i < timelineDates.length; i++) {
 			if (i % 2 == 0) {
 				// if its even add it to the left
-				timeline += `<div class="timeline-container timeline-left"> <h2> ${getElement(timelineNotes, timelineDates[i], 0, 0)}  </h2> <div class="timeline-card">`
+				timeline += `<div class="timeline-container timeline-left"> <h2> ${getElement(timelineNotes, timelineDates[i], 0, 0).replace(/-00$/g, '').replace(/-00$/g, '').replace(/-00$/g, '')}  </h2> <div class="timeline-card">`
 
 
 			} else {
 				// else add it to the right
-				timeline += `<div class="timeline-container timeline-right"> <h2> ${getElement(timelineNotes, timelineDates[i], 0, 0)}  </h2> <div class="timeline-card">`
+				timeline += `<div class="timeline-container timeline-right"> <h2> ${getElement(timelineNotes, timelineDates[i], 0, 0).replace(/-00$/g, '').replace(/-00$/g, '').replace(/-00$/g, '')}  </h2> <div class="timeline-card">`
 			}
 
 			if (!timelineNotes[timelineDates[i]]) {
