@@ -17,7 +17,7 @@ this creates a timeline of the notes which have the following tags [tag1, tag2, 
 2. Add timeline info to a note as follows (it is hidden when in preview mode to keep notes clean)
 ```
 <span class='ob-timelines' data-date='2025-10-21-24' data-title='Title of Event' 
-data-img = 'IMAGE_URL.png'> Description of the event to be added! </span> 
+data-img = 'IMAGE_URL'> Description of the event to be added! </span> 
 ```
 Date format is the following: YYYY-MM-DD-HH (not all elements have to be specified however the order of the elements must be respected as such since it is used for the sorting of the notes)
 
