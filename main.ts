@@ -24,7 +24,7 @@ export default class TimelinesPlugin extends Plugin {
 		var _this = this;
         // Load message
         await this.loadSettings();
-        console.log('Loaded Comments Plugin');
+        console.log('Loaded Timelines Plugin');
 
         this.addSettingTab(new TimelinesSettingTab(this.app, this));
 
