@@ -10,7 +10,6 @@ const DEFAULT_SETTINGS: TimelinesSettings = {
 	DEFAULT_SORT_DIRECTION: true
 }
 
-// Delay passed function for specified timeout
 function getElement(MultiList:[][][],d1: number, d2: number, d3: number) {
 	if(MultiList[d1][d2][d3]){
 		return MultiList[d1][d2][d3];
