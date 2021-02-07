@@ -10,12 +10,12 @@ const DEFAULT_SETTINGS: TimelinesSettings = {
 	DEFAULT_SORT_DIRECTION: true
 }
 
-function getElement(MultiList:[][][],d1: number, d2: number, d3: number) {
-	if(MultiList[d1][d2][d3]){
+function getElement(MultiList: [][][], d1: number, d2: number, d3: number) {
+	if (MultiList[d1][d2][d3]) {
 		return MultiList[d1][d2][d3];
 	}
 	return "";
-  };
+};
 
 export default class TimelinesPlugin extends Plugin {
 	settings: TimelinesSettings;
@@ -46,10 +46,10 @@ export default class TimelinesPlugin extends Plugin {
 		await this.saveData(this.settings);
 	}
 
-	FilterMDFiles(file: TFile, tag_list: String[]) {
+	FilterMDFiles(file: TFile, tagList: String[]) {
 		var fileCache = this.app.metadataCache.getFileCache(file);
-		if(fileCache.frontmatter && fileCache.frontmatter.tags){
-			return tag_list.every(function(val) {return fileCache.frontmatter.tags.indexOf(val) >= 0;})
+		if (fileCache.frontmatter && fileCache.frontmatter.tags) {
+			return tagList.every(function (val) { return fileCache.frontmatter.tags.indexOf(val) >= 0; })
 		}
 		return false;
 	}
@@ -59,84 +59,82 @@ export default class TimelinesPlugin extends Plugin {
 		const lines = this.getLines(this.getEditor());
 		if (!lines) return;
 		// Parse the tags to search for the proper files
-		const tag_list = lines.split(";");
-		tag_list.push(this.settings.DEFAULT_TIMELINE_TAG)
+		const tagList = lines.split(";");
+		tagList.push(this.settings.DEFAULT_TIMELINE_TAG)
 		// Filter all markdown files to only those containing the tag list
-		let file_list = this.app.vault.getMarkdownFiles().filter(file => this.FilterMDFiles(file, tag_list));
-		if(!file_list){
+		let fileList = this.app.vault.getMarkdownFiles().filter(file => this.FilterMDFiles(file, tagList));
+		if (!fileList) {
 			// if no files valid for timeline
 			return;
 		}
 		// Keep only the files that have the time info 
 		let timeline = '<div class="timeline">'
-		let timeline_notes = [];
-		let timeline_dates = [];
+		let timelineNotes = [];
+		let timelineDates = [];
 
-		for(let i=0; i<file_list.length; i++){
+		for (let i = 0; i < fileList.length; i++) {
 			// Convert into HTML element 
 			let text = document.createElement('div')
-			text.innerHTML = await this.app.vault.read(file_list[i]);
+			text.innerHTML = await this.app.vault.read(fileList[i]);
 			// Use HTML parser to find the desired elements
-			let note_info = text.querySelector("span[class='ob-timelines']");
+			let noteInfo = text.querySelector("span[class='ob-timelines']");
 			// if no ob-timelines class
-			if(!(note_info instanceof HTMLElement)){
+			if (!(noteInfo instanceof HTMLElement)) {
 				continue;
 			}
 			// check if a valid date is specified
-			let note_id = +note_info.dataset.date?.split('-').join('');
+			let noteId = +noteInfo.dataset.date?.split('-').join('');
 
-			if(!Number.isInteger(note_id)){
+			if (!Number.isInteger(noteId)) {
 				continue;
 			}
-			console.log(note_id + ' ' + !Number.isInteger(note_id))
-
 			// if not title is specified use note name
-			let note_title = note_info.dataset.title ?? file_list[i].name;
+			let noteTitle = noteInfo.dataset.title ?? fileList[i].name;
 
-			if(!timeline_notes[note_id]){
-				timeline_notes[note_id] = [];
-				timeline_notes[note_id][0] = [note_info.dataset.date, note_title, note_info.dataset.img, note_info.innerHTML, file_list[i].path];
-				timeline_dates.push(note_id);
+			if (!timelineNotes[noteId]) {
+				timelineNotes[noteId] = [];
+				timelineNotes[noteId][0] = [noteInfo.dataset.date, noteTitle, noteInfo.dataset.img, noteInfo.innerHTML, fileList[i].path];
+				timelineDates.push(noteId);
 			} else {
 				// if note_id already present append to it
-				timeline_notes[note_id][timeline_notes[note_id].length] = [note_info.dataset.date, note_title, note_info.dataset.img, note_info.innerHTML, file_list[i].path];	
+				timelineNotes[noteId][timelineNotes[noteId].length] = [noteInfo.dataset.date, noteTitle, noteInfo.dataset.img, noteInfo.innerHTML, fileList[i].path];
 			}
 		}
 
 		// Sort events based on setting
-		if(this.settings.DEFAULT_SORT_DIRECTION){
+		if (this.settings.DEFAULT_SORT_DIRECTION) {
 			// default is ascending
-			timeline_dates = timeline_dates.sort((d1, d2) => d1 - d2)
+			timelineDates = timelineDates.sort((d1, d2) => d1 - d2)
 		} else {
 			// else it is descending
-			timeline_dates = timeline_dates.sort((d1, d2) => d2 - d1)
+			timelineDates = timelineDates.sort((d1, d2) => d2 - d1)
 		}
 
 		// Build the timeline html element
-		for(let i=0; i < timeline_dates.length; i++){
-			if(i%2 == 0){
+		for (let i = 0; i < timelineDates.length; i++) {
+			if (i % 2 == 0) {
 				// if its even add it to the left
-				timeline += `<div class="timeline-container timeline-left"> <h2> ${escape(getElement(timeline_notes,timeline_dates[i],0,0))}  </h2> <div class="timeline-card">`
+				timeline += `<div class="timeline-container timeline-left"> <h2> ${getElement(timelineNotes, timelineDates[i], 0, 0)}  </h2> <div class="timeline-card">`
 
-				
+
 			} else {
 				// else add it to the right
-				timeline += `<div class="timeline-container timeline-right"> <h2> ${escape(getElement(timeline_notes,timeline_dates[i],0,0))}  </h2> <div class="timeline-card">`
+				timeline += `<div class="timeline-container timeline-right"> <h2> ${getElement(timelineNotes, timelineDates[i], 0, 0)}  </h2> <div class="timeline-card">`
 			}
 
-			if(!timeline_notes[timeline_dates[i]]){
+			if (!timelineNotes[timelineDates[i]]) {
 				continue;
 			}
 
-			for(let j=0; j < timeline_notes[timeline_dates[i]].length; j++){
+			for (let j = 0; j < timelineNotes[timelineDates[i]].length; j++) {
 				// add an image only if available
-				if (getElement(timeline_notes,timeline_dates[i],j,2)){
-					timeline += `<div class="thumb" style="background-image: url(${escape(getElement(timeline_notes,timeline_dates[i],j,2))});"></div>`
+				if (getElement(timelineNotes, timelineDates[i], j, 2)) {
+					timeline += `<div class="thumb" style="background-image: url(${getElement(timelineNotes, timelineDates[i], j, 2)});"></div>`
 				}
-							
-				timeline += `<article> <h3> <a class="internal-link" href="${escape(getElement(timeline_notes,timeline_dates[i],j,4))}">${escape(getElement(timeline_notes,timeline_dates[i],j,1))} 
-				</a> </h3> </article> <p> ${escape(getElement(timeline_notes,timeline_dates[i],j,3))} </p> </div>`
-			} 
+
+				timeline += `<article> <h3> <a class="internal-link" href="${getElement(timelineNotes, timelineDates[i], j, 4).replace(/([""``''])/g, '\\$1')}">${getElement(timelineNotes, timelineDates[i], j, 1).replace(/([""``''])/g, '\\$1')} 
+				</a> </h3> </article> <p> ${getElement(timelineNotes, timelineDates[i], j, 3).replace(/([""``''])/g, '\\$1')} </p> </div>`
+			}
 			timeline += '</div>';
 		}
 		timeline += '</div>';
@@ -178,10 +176,10 @@ class TimelinesSettingTab extends PluginSettingTab {
 	}
 
 	display(): void {
-		let {containerEl} = this;
+		let { containerEl } = this;
 
 		containerEl.empty();
-		containerEl.createEl('h2', {text: 'Obsidian Timelines Settings'});
+		containerEl.createEl('h2', { text: 'Obsidian Timelines Settings' });
 
 		new Setting(containerEl)
 			.setName('Default timeline tag')
@@ -191,9 +189,9 @@ class TimelinesSettingTab extends PluginSettingTab {
 				.onChange(async (value) => {
 					this.plugin.settings.DEFAULT_TIMELINE_TAG = value;
 					await this.plugin.saveSettings();
-			}));
+				}));
 
-		
+
 		new Setting(containerEl)
 			.setName('Chronological Direction')
 			.setDesc('Default: OLD -> NEW. Turn this setting off: NEW -> OLD')
@@ -203,6 +201,6 @@ class TimelinesSettingTab extends PluginSettingTab {
 					this.plugin.settings.DEFAULT_SORT_DIRECTION = value;
 					await this.plugin.saveSettings();
 				});
-            })
+			})
 	}
 }
