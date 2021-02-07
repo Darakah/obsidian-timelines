@@ -1,4 +1,7 @@
-# obsidian-timelines
+# obsidian Timelines
+
+# UPDATE README
+
 Create a timeline view of all notes with the specified combination of tags
 
 ## Adding a timeline
