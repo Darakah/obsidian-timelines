@@ -21,7 +21,6 @@ export default class TimelinesPlugin extends Plugin {
 	settings: TimelinesSettings;
 
 	async onload() {
-		var _this = this;
 		// Load message
 		await this.loadSettings();
 		console.log('Loaded Timelines Plugin');
@@ -89,22 +88,19 @@ export default class TimelinesPlugin extends Plugin {
 			if(!Number.isInteger(note_id)){
 				continue;
 			}
+			console.log(note_id + ' ' + !Number.isInteger(note_id))
+
 			// if not title is specified use note name
 			let note_title = note_info.dataset.title ?? file_list[i].name;
 
 			if(!timeline_notes[note_id]){
 				timeline_notes[note_id] = [];
 				timeline_notes[note_id][0] = [note_info.dataset.date, note_title, note_info.dataset.img, note_info.innerHTML, file_list[i].path];
-				timeline_dates[i] = note_id;
+				timeline_dates.push(note_id);
 			} else {
 				// if note_id already present append to it
 				timeline_notes[note_id][timeline_notes[note_id].length] = [note_info.dataset.date, note_title, note_info.dataset.img, note_info.innerHTML, file_list[i].path];	
 			}
-		}
-
-		if(!timeline_dates){
-			// if no valid timeline info provided
-			return;
 		}
 
 		// Sort events based on setting
@@ -118,18 +114,14 @@ export default class TimelinesPlugin extends Plugin {
 
 		// Build the timeline html element
 		for(let i=0; i < timeline_dates.length; i++){
-			if(!timeline_dates[i]){
-				continue;
-			}
-
 			if(i%2 == 0){
 				// if its even add it to the left
-				timeline += '<div class="timeline-container timeline-left"> <h2> ' + 
-				getElement(timeline_notes,timeline_dates[i],0,0) + ' </h2> <div class="timeline-card">' ;
+				timeline += `<div class="timeline-container timeline-left"> <h2> ${escape(getElement(timeline_notes,timeline_dates[i],0,0))}  </h2> <div class="timeline-card">`
+
+				
 			} else {
 				// else add it to the right
-				timeline += '<div class="timeline-container timeline-right"> <h2 style="text-align:right"> ' + 
-				getElement(timeline_notes,timeline_dates[i],0,0) + ' </h2> <div class="timeline-card">' ;
+				timeline += `<div class="timeline-container timeline-right"> <h2> ${escape(getElement(timeline_notes,timeline_dates[i],0,0))}  </h2> <div class="timeline-card">`
 			}
 
 			if(!timeline_notes[timeline_dates[i]]){
@@ -139,13 +131,11 @@ export default class TimelinesPlugin extends Plugin {
 			for(let j=0; j < timeline_notes[timeline_dates[i]].length; j++){
 				// add an image only if available
 				if (getElement(timeline_notes,timeline_dates[i],j,2)){
-					timeline += '<div class="thumb" style="background-image: url(' +  
-					getElement(timeline_notes,timeline_dates[i],j,2) + ');"></div>'
+					timeline += `<div class="thumb" style="background-image: url(${escape(getElement(timeline_notes,timeline_dates[i],j,2))});"></div>`
 				}
 							
-				timeline += '<article> <h3> <a class="internal-link" href="' + getElement(timeline_notes,timeline_dates[i],j,4) + '">' + 
-				getElement(timeline_notes,timeline_dates[i],j,1) + ' </a> </h3> </article> <p> ' + 
-				getElement(timeline_notes,timeline_dates[i],j,3) + '</p> </div> ';
+				timeline += `<article> <h3> <a class="internal-link" href="${escape(getElement(timeline_notes,timeline_dates[i],j,4))}">${escape(getElement(timeline_notes,timeline_dates[i],j,1))} 
+				</a> </h3> </article> <p> ${escape(getElement(timeline_notes,timeline_dates[i],j,3))} </p> </div>`
 			} 
 			timeline += '</div>';
 		}
@@ -198,7 +188,6 @@ class TimelinesSettingTab extends PluginSettingTab {
 			.setDesc("Tag to specify which notes to include in created timelines e.g. timeline for #timeline tag")
 			.addText(text => text
 				.setPlaceholder(this.plugin.settings.DEFAULT_TIMELINE_TAG)
-				.setValue('')
 				.onChange(async (value) => {
 					this.plugin.settings.DEFAULT_TIMELINE_TAG = value;
 					await this.plugin.saveSettings();
