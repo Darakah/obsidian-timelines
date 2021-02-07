@@ -6,7 +6,7 @@ Create a timeline view of all notes with the specified combination of tags
 
 ## Adding a timeline
 
-`tag1;tag2;tag3` -> select these -> cmd/ctrl + P `add timeline` command
+write inside the note where you want to insert the timeline the list of tags that you want to choose separated by `;` (no ; after the last tag) `tag1;tag2;tag3` -> select these -> cmd/ctrl + P `add timeline` command
 
 this creates a timeline of the notes which have the following tags [tag1, tag2, tag3, timeline]
 
