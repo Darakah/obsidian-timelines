@@ -51,6 +51,7 @@ The note will be ignored in the following cases:
   - The length of each element i.e. `YEAR` can be of any length for example `1234124314`
   - The same applies to MONTH, DAY and HOUR. this means **if your input time is not valid the plugin will not check that**. Why this choice? If this plugin is used for a fantasy setup where the # of month are not only 12 for example.
   - ALL 4 GROUPS must be specified however if they don't exist / not want to be shown replace them with a zero. For example if an event only has the year and the month it can be written as follows `2300-02-00-00` this will be rendered on the timeline as `2300-02` (the trailing zeros will be removed). For only a year `2300-00-00-00` -> `2300`
+  - IMPORTANT: the sorting is based on the date being converted to an integer after parsing out the `-` this means to get the proper sorting, if minutes are not added you need to replace with `00` (the maximum number of integer for that date category.
 
 - Title:
   - Optional
