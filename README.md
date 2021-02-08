@@ -50,7 +50,7 @@ The note will be ignored in the following cases:
   - Only integers (numbers) are allowed in the date other then the 4 seperators `-` used to distinguish the different groups
   - The length of each element i.e. `YEAR` can be of any length for example `1234124314`
   - The same applies to MONTH, DAY and HOUR. this means **if your input time is not valid the plugin will not check that**. Why this choice? If this plugin is used for a fantasy setup where the # of month are not only 12 for example.
-  - ALL 4 GROUPS must be specified however if they don't exist / not want to be shown replace them with a zero. For example if an event only has the year and the month it can be written as follows `2300-02-0-0` this will be rendered on the timeline as `2300-02` (the trailing zeros will be removed). For only a year `2300-0-0-0` -> `2300`
+  - ALL 4 GROUPS must be specified however if they don't exist / not want to be shown replace them with a zero. For example if an event only has the year and the month it can be written as follows `2300-02-00-00` this will be rendered on the timeline as `2300-02` (the trailing zeros will be removed). For only a year `2300-00-00-00` -> `2300`
 
 - Title:
   - Optional
