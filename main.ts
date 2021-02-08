@@ -17,8 +17,8 @@ interface CardContainer {
 	img: string;
 	innerHTML: string;
 	path: string;
-  }
-  
+}
+
 type NoteData = CardContainer[];
 type AllNotesData = NoteData[];
 
@@ -80,37 +80,36 @@ export default class TimelinesPlugin extends Plugin {
 			return;
 		}
 		// Keep only the files that have the time info 
-		let timeline = document.createElement('div'); 
+		let timeline = document.createElement('div');
 		timeline.setAttribute('class', 'timeline')
 		let timelineNotes = [];
 		let timelineDates = [];
 
 		for (let i = 0; i < fileList.length; i++) {
-			// Convert into HTML element 
-			let text = document.createElement('div')
-			text.innerHTML = await this.app.vault.read(fileList[i]);
-			// Use HTML parser to find the desired elements
-			let noteInfo = text.querySelector("span[class='ob-timelines']");
-			// if no ob-timelines class
-			if (!(noteInfo instanceof HTMLElement)) {
+			// Create a DOM Parser
+			const domparser = new DOMParser()
+			const doc = domparser.parseFromString(await this.app.vault.read(fileList[i]), 'text/html')
+			let timelineData = doc.getElementsByClassName('ob-timelines')
+			if (!(timelineData[0] instanceof HTMLElement)) {
 				continue;
 			}
+
 			// check if a valid date is specified
-			let noteId = +noteInfo.dataset.date?.split('-').join('');
+			let noteId = +timelineData[0].dataset.date?.split('-').join('');
 
 			if (!Number.isInteger(noteId)) {
 				continue;
 			}
 			// if not title is specified use note name
-			let noteTitle = noteInfo.dataset.title ?? fileList[i].name;
+			let noteTitle = timelineData[0].dataset.title ?? fileList[i].name;
 
 			if (!timelineNotes[noteId]) {
 				timelineNotes[noteId] = [];
-				timelineNotes[noteId][0] = [noteInfo.dataset.date, noteTitle, noteInfo.dataset.img, noteInfo.innerHTML, fileList[i].path];
+				timelineNotes[noteId][0] = [timelineData[0].dataset.date, noteTitle, timelineData[0].dataset.img, timelineData[0].innerHTML, fileList[i].path];
 				timelineDates.push(noteId);
 			} else {
 				// if note_id already present append to it
-				timelineNotes[noteId][timelineNotes[noteId].length] = [noteInfo.dataset.date, noteTitle, noteInfo.dataset.img, noteInfo.innerHTML, fileList[i].path];
+				timelineNotes[noteId][timelineNotes[noteId].length] = [timelineData[0].dataset.date, noteTitle, timelineData[0].dataset.img, timelineData[0].innerHTML, fileList[i].path];
 			}
 		}
 
@@ -125,11 +124,8 @@ export default class TimelinesPlugin extends Plugin {
 
 		// Build the timeline html element
 		for (let i = 0; i < timelineDates.length; i++) {
-			let noteContainer = document.createElement('div');
-			noteContainer.addClass('timeline-container')
-			
-			let noteHeader = document.createElement('h2')
-			noteHeader.setText(getElement(timelineNotes, timelineDates[i], 0, 0).replace(/-00$/g, '').replace(/-00$/g, '').replace(/-00$/g, ''));
+			let noteContainer = timeline.createDiv({ cls: 'timeline-container' });
+			let noteHeader = noteContainer.createEl('h2')
 			if (i % 2 == 0) {
 				// if its even add it to the left
 				noteContainer.addClass('timeline-left');
@@ -137,42 +133,24 @@ export default class TimelinesPlugin extends Plugin {
 			} else {
 				// else add it to the right
 				noteContainer.addClass('timeline-right');
-				noteHeader.setAttribute('style', 'text-align: right;')	
+				noteHeader.setAttribute('style', 'text-align: right;')
 			}
-
-			let noteCard = document.createElement('div')
-			noteCard.setAttribute('class', 'timeline-card')
+			noteHeader.setText(getElement(timelineNotes, timelineDates[i], 0, 0).replace(/-0*$/g, '').replace(/-0*$/g, '').replace(/-0*$/g, ''))
 
 			if (!timelineNotes[timelineDates[i]]) {
 				continue;
 			}
 
 			for (let j = 0; j < timelineNotes[timelineDates[i]].length; j++) {
+				let noteCard = noteContainer.createDiv({ cls: 'timeline-card' })
 				// add an image only if available
 				if (getElement(timelineNotes, timelineDates[i], j, 2)) {
-					let noteBackgImg = document.createElement('div')
-					noteBackgImg.setAttribute('class', 'thumb')
-					noteBackgImg.setAttribute('style', `background-image: url(${getElement(timelineNotes, timelineDates[i], j, 2)});`)
-					noteCard.appendChild(noteBackgImg);
+					noteCard.createDiv({ cls: 'thumb', attr: { style: `background-image: url(${getElement(timelineNotes, timelineDates[i], j, 2)});` } });
 				}
 
-				let noteArticle = document.createElement('article')
-				let noteCardH3 = document.createElement('h3')
-				let noteCardA = document.createElement('a')
-				noteCardA.addClass('internal-link') 
-				noteCardA.setAttribute('href', `${getElement(timelineNotes, timelineDates[i], j, 4)}`)
-				noteCardA.setText(getElement(timelineNotes, timelineDates[i], j, 1).replace(/([""``''])/g, '\\$1'))
-				noteArticle.appendChild(noteCardH3);
-				noteArticle.appendChild(noteCardA);
-				noteCard.appendChild(noteArticle)
-
-				let noteCardP = document.createElement('p')
-				noteCardP.setText(getElement(timelineNotes, timelineDates[i], j, 3).replace(/([""``''])/g, '\\$1'));
-				noteCard.appendChild(noteCardP)
+				noteCard.createEl('article').createEl('h3').createEl('a', { cls: 'internal-link', attr: { href: `${getElement(timelineNotes, timelineDates[i], j, 4)}` } }).setText(getElement(timelineNotes, timelineDates[i], j, 1).replace(/([""``''])/g, '\\$1'))
+				noteCard.createEl('p').setText(getElement(timelineNotes, timelineDates[i], j, 3).replace(/([""``''])/g, '\\$1'))
 			}
-			noteContainer.appendChild(noteHeader);
-			noteContainer.appendChild(noteCard)
-			timeline.appendChild(noteContainer)
 		}
 
 		// Replace the selected tags with the timeline html
