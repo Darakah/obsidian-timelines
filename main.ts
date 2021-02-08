@@ -2,13 +2,13 @@ import { time } from 'console';
 import { ItemView, MarkdownView, WorkspaceLeaf, TFile, TagCache, LinkCache, MetadataCache, App, Modal, Notice, Plugin, PluginSettingTab, Setting, Vault } from 'obsidian';
 
 interface TimelinesSettings {
-	DEFAULT_TIMELINE_TAG: string;
-	DEFAULT_SORT_DIRECTION: boolean;
+	timelineTag: string;
+	sortDirection: boolean;
 }
 
 const DEFAULT_SETTINGS: TimelinesSettings = {
-	DEFAULT_TIMELINE_TAG: 'timeline',
-	DEFAULT_SORT_DIRECTION: true
+	timelineTag: 'timeline',
+	sortDirection: true
 }
 
 interface CardContainer {
@@ -72,7 +72,7 @@ export default class TimelinesPlugin extends Plugin {
 		if (!lines) return;
 		// Parse the tags to search for the proper files
 		const tagList = lines.split(";");
-		tagList.push(this.settings.DEFAULT_TIMELINE_TAG)
+		tagList.push(this.settings.timelineTag)
 		// Filter all markdown files to only those containing the tag list
 		let fileList = this.app.vault.getMarkdownFiles().filter(file => this.FilterMDFiles(file, tagList));
 		if (!fileList) {
@@ -114,7 +114,7 @@ export default class TimelinesPlugin extends Plugin {
 		}
 
 		// Sort events based on setting
-		if (this.settings.DEFAULT_SORT_DIRECTION) {
+		if (this.settings.sortDirection) {
 			// default is ascending
 			timelineDates = timelineDates.sort((d1, d2) => d1 - d2)
 		} else {
@@ -198,9 +198,9 @@ class TimelinesSettingTab extends PluginSettingTab {
 			.setName('Default timeline tag')
 			.setDesc("Tag to specify which notes to include in created timelines e.g. timeline for #timeline tag")
 			.addText(text => text
-				.setPlaceholder(this.plugin.settings.DEFAULT_TIMELINE_TAG)
+				.setPlaceholder(this.plugin.settings.timelineTag)
 				.onChange(async (value) => {
-					this.plugin.settings.DEFAULT_TIMELINE_TAG = value;
+					this.plugin.settings.timelineTag = value;
 					await this.plugin.saveSettings();
 				}));
 
@@ -209,9 +209,9 @@ class TimelinesSettingTab extends PluginSettingTab {
 			.setName('Chronological Direction')
 			.setDesc('Default: OLD -> NEW. Turn this setting off: NEW -> OLD')
 			.addToggle((toggle) => {
-				toggle.setValue(this.plugin.settings.DEFAULT_SORT_DIRECTION);
+				toggle.setValue(this.plugin.settings.sortDirection);
 				toggle.onChange(async (value) => {
-					this.plugin.settings.DEFAULT_SORT_DIRECTION = value;
+					this.plugin.settings.sortDirection = value;
 					await this.plugin.saveSettings();
 				});
 			})
