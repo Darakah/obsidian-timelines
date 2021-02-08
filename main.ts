@@ -1,3 +1,4 @@
+import { time } from 'console';
 import { ItemView, MarkdownView, WorkspaceLeaf, TFile, TagCache, LinkCache, MetadataCache, App, Modal, Notice, Plugin, PluginSettingTab, Setting, Vault } from 'obsidian';
 
 interface TimelinesSettings {
@@ -10,7 +11,18 @@ const DEFAULT_SETTINGS: TimelinesSettings = {
 	DEFAULT_SORT_DIRECTION: true
 }
 
-function getElement(MultiList: [][][], d1: number, d2: number, d3: number) {
+interface CardContainer {
+	date: string;
+	title: string;
+	img: string;
+	innerHTML: string;
+	path: string;
+  }
+  
+type NoteData = CardContainer[];
+type AllNotesData = NoteData[];
+
+function getElement(MultiList: AllNotesData, d1: number, d2: number, d3: number) {
 	if (MultiList[d1][d2][d3]) {
 		return MultiList[d1][d2][d3];
 	}
@@ -68,7 +80,8 @@ export default class TimelinesPlugin extends Plugin {
 			return;
 		}
 		// Keep only the files that have the time info 
-		let timeline = '<div class="timeline">'
+		let timeline = document.createElement('div'); 
+		timeline.setAttribute('class', 'timeline')
 		let timelineNotes = [];
 		let timelineDates = [];
 
@@ -112,15 +125,23 @@ export default class TimelinesPlugin extends Plugin {
 
 		// Build the timeline html element
 		for (let i = 0; i < timelineDates.length; i++) {
+			let noteContainer = document.createElement('div');
+			noteContainer.addClass('timeline-container')
+			
+			let noteHeader = document.createElement('h2')
+			noteHeader.setText(getElement(timelineNotes, timelineDates[i], 0, 0).replace(/-00$/g, '').replace(/-00$/g, '').replace(/-00$/g, ''));
 			if (i % 2 == 0) {
 				// if its even add it to the left
-				timeline += `<div class="timeline-container timeline-left"> <h2> ${getElement(timelineNotes, timelineDates[i], 0, 0).replace(/-00$/g, '').replace(/-00$/g, '').replace(/-00$/g, '')}  </h2> <div class="timeline-card">`
-
+				noteContainer.addClass('timeline-left');
 
 			} else {
 				// else add it to the right
-				timeline += `<div class="timeline-container timeline-right"> <h2> ${getElement(timelineNotes, timelineDates[i], 0, 0).replace(/-00$/g, '').replace(/-00$/g, '').replace(/-00$/g, '')}  </h2> <div class="timeline-card">`
+				noteContainer.addClass('timeline-right');
+				noteHeader.setAttribute('style', 'text-align: right;')	
 			}
+
+			let noteCard = document.createElement('div')
+			noteCard.setAttribute('class', 'timeline-card')
 
 			if (!timelineNotes[timelineDates[i]]) {
 				continue;
@@ -129,18 +150,33 @@ export default class TimelinesPlugin extends Plugin {
 			for (let j = 0; j < timelineNotes[timelineDates[i]].length; j++) {
 				// add an image only if available
 				if (getElement(timelineNotes, timelineDates[i], j, 2)) {
-					timeline += `<div class="thumb" style="background-image: url(${getElement(timelineNotes, timelineDates[i], j, 2)});"></div>`
+					let noteBackgImg = document.createElement('div')
+					noteBackgImg.setAttribute('class', 'thumb')
+					noteBackgImg.setAttribute('style', `background-image: url(${getElement(timelineNotes, timelineDates[i], j, 2)});`)
+					noteCard.appendChild(noteBackgImg);
 				}
 
-				timeline += `<article> <h3> <a class="internal-link" href="${getElement(timelineNotes, timelineDates[i], j, 4).replace(/([""``''])/g, '\\$1')}">${getElement(timelineNotes, timelineDates[i], j, 1).replace(/([""``''])/g, '\\$1')} 
-				</a> </h3> </article> <p> ${getElement(timelineNotes, timelineDates[i], j, 3).replace(/([""``''])/g, '\\$1')} </p> </div>`
+				let noteArticle = document.createElement('article')
+				let noteCardH3 = document.createElement('h3')
+				let noteCardA = document.createElement('a')
+				noteCardA.addClass('internal-link') 
+				noteCardA.setAttribute('href', `${getElement(timelineNotes, timelineDates[i], j, 4)}`)
+				noteCardA.setText(getElement(timelineNotes, timelineDates[i], j, 1).replace(/([""``''])/g, '\\$1'))
+				noteArticle.appendChild(noteCardH3);
+				noteArticle.appendChild(noteCardA);
+				noteCard.appendChild(noteArticle)
+
+				let noteCardP = document.createElement('p')
+				noteCardP.setText(getElement(timelineNotes, timelineDates[i], j, 3).replace(/([""``''])/g, '\\$1'));
+				noteCard.appendChild(noteCardP)
 			}
-			timeline += '</div>';
+			noteContainer.appendChild(noteHeader);
+			noteContainer.appendChild(noteCard)
+			timeline.appendChild(noteContainer)
 		}
-		timeline += '</div>';
 
 		// Replace the selected tags with the timeline html
-		this.setLines(this.getEditor(), [timeline]);
+		this.setLines(this.getEditor(), [timeline.outerHTML]);
 	}
 
 	getEditor(): CodeMirror.Editor {

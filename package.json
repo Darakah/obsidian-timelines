@@ -1,6 +1,6 @@
 {
   "name": "Timelines",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Create a timeline view of all notes with the specified combination of tags",
   "main": "main.js",
   "scripts": {
