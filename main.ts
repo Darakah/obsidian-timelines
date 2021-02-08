@@ -125,7 +125,7 @@ export default class TimelinesPlugin extends Plugin {
 		// Build the timeline html element
 		for (let i = 0; i < timelineDates.length; i++) {
 			let noteContainer = timeline.createDiv({ cls: 'timeline-container' });
-			let noteHeader = noteContainer.createEl('h2')
+			let noteHeader = noteContainer.createEl('h2', {text: getElement(timelineNotes, timelineDates[i], 0, 0).replace(/-0*$/g, '').replace(/-0*$/g, '').replace(/-0*$/g, '')})
 			if (i % 2 == 0) {
 				// if its even add it to the left
 				noteContainer.addClass('timeline-left');
@@ -135,7 +135,6 @@ export default class TimelinesPlugin extends Plugin {
 				noteContainer.addClass('timeline-right');
 				noteHeader.setAttribute('style', 'text-align: right;')
 			}
-			noteHeader.setText(getElement(timelineNotes, timelineDates[i], 0, 0).replace(/-0*$/g, '').replace(/-0*$/g, '').replace(/-0*$/g, ''))
 
 			if (!timelineNotes[timelineDates[i]]) {
 				continue;
@@ -148,8 +147,8 @@ export default class TimelinesPlugin extends Plugin {
 					noteCard.createDiv({ cls: 'thumb', attr: { style: `background-image: url(${getElement(timelineNotes, timelineDates[i], j, 2)});` } });
 				}
 
-				noteCard.createEl('article').createEl('h3').createEl('a', { cls: 'internal-link', attr: { href: `${getElement(timelineNotes, timelineDates[i], j, 4)}` } }).setText(getElement(timelineNotes, timelineDates[i], j, 1).replace(/([""``''])/g, '\\$1'))
-				noteCard.createEl('p').setText(getElement(timelineNotes, timelineDates[i], j, 3).replace(/([""``''])/g, '\\$1'))
+				noteCard.createEl('article').createEl('h3').createEl('a', { cls: 'internal-link', attr: { href: `${getElement(timelineNotes, timelineDates[i], j, 4)}`}, text: getElement(timelineNotes, timelineDates[i], j, 1).replace(/([""``''])/g, '\\$1')})
+				noteCard.createEl('p', {text: getElement(timelineNotes, timelineDates[i], j, 3).replace(/([""``''])/g, '\\$1')})
 			}
 		}
 
