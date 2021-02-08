@@ -44,6 +44,7 @@ The note will be ignored in the following cases:
 
 ### Date
 - The most important and essential info, if it is not valid the note will be ignored
+
 - Valid date format: 
   - `YEAR-MONTH-DAY-HOUR`
   - Only integers (numbers) are allowed in the date other then the 4 seperators `-` used to distinguish the different groups
@@ -51,9 +52,18 @@ The note will be ignored in the following cases:
   - The same applies to MONTH, DAY and HOUR. this means **if your input time is not valid the plugin will not check that**. Why this choice? If this plugin is used for a fantasy setup where the # of month are not only 12 for example.
   - ALL 4 GROUPS must be specified however if they don't exist / not want to be shown replace them with a zero. For example if an event only has the year and the month it can be written as follows `2300-02-0-0` this will be rendered on the timeline as `2300-02` (the trailing zeros will be removed). For only a year `2300-0-0-0` -> `2300`
 
+- Title:
+  - Optional
+  - If a title is not specified the name of the note will be used
 
+- Description:
+  - Optional
+  - If a description is not specified an empty section will be shown
 
-
+- Background Image:
+  - If an image is not specified no image will be shown (just text)
+  - If an invalid url is given (an empty black section will be seen for that note card)
+  - Currently only `http` & `absolute local path` are will render, in the current obsidian release of `v0.10.13` obsidian links for background images are blocked from rendering, hopefully it is promised that this will be removed in the upcuming `v0.10.14` release. 
 
 
 
