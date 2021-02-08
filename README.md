@@ -26,7 +26,8 @@ tags: [timeline, tag1, tag2, tag3]
 3. Note must contain a timeline info span (it is not hidden in preview to keep note clean) containing the information to be presented (at least the date must be valid all other fields are optional, a non-valid date will cause the note to be ignored when the timeline is being built)
 
 ```html
-<span class='ob-timelines' data-date='1444-10-00-00' data-title='TITLE' data-img = 'URL'>Description</span> 
+<span class='ob-timelines' data-date='1444-10-00-00' data-title='TITLE' data-img = 'URL'> D
+  E S C R I P T I O N </span> 
 ```
 
 The note will be ignored in the following cases:
@@ -35,5 +36,27 @@ The note will be ignored in the following cases:
 - No timeline span info block
 - Class name is wrong `ob-timelines` must be specified
 - The used date is not VALID, must be in the following format YEAR-MONTH-DAY-MINUTES (check info section below for more details)
+
+## Timeline Properties
+
+### Timeline Span block
+- Hidden in preview by default in order to keep the note clean
+
+### Date
+- The most important and essential info, if it is not valid the note will be ignored
+- Valid date format: 
+  - `YEAR-MONTH-DAY-HOUR`
+  - Only integers (numbers) are allowed in the date other then the 4 seperators `-` used to distinguish the different groups
+  - The length of each element i.e. `YEAR` can be of any length for example `1234124314`
+  - The same applies to MONTH, DAY and HOUR. this means **if your input time is not valid the plugin will not check that**. Why this choice? If this plugin is used for a fantasy setup where the # of month are not only 12 for example.
+  - ALL 4 GROUPS must be specified however if they don't exist / not want to be shown replace them with a zero. For example if an event only has the year and the month it can be written as follows `2300-02-0-0` this will be rendered on the timeline as `2300-02` (the trailing zeros will be removed). For only a year `2300-0-0-0` -> `2300`
+
+
+
+
+
+
+
+
 
 
