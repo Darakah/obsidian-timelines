@@ -12,7 +12,7 @@ Generate a chronological timeline of all notes with the specified set of tags.
 4. The `tag1;tag2;tag3` selected string will be replaced with html code that will render the timeline. 
 
 ## Example
-![example](./images/exp_2.png)
+![example](https://raw.githubusercontent.com/Darakah/obsidian-timelines/main/images/exp_2.png)
 
 ## Timeline Tagging a note
 For a note to be included in a timeline the following must be valid:
