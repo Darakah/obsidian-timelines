@@ -62,6 +62,7 @@ The note will be ignored in the following cases:
   - If a description is not specified an empty section will be shown
 
 - Background Image:
+  - Optional
   - If an image is not specified no image will be shown (just text)
   - If an invalid url is given (an empty black section will be seen for that note card)
   - Currently only `http` & `absolute local path` are will render, in the current obsidian release of `v0.10.13` obsidian links for background images are blocked from rendering, hopefully it is promised that this will be removed in the upcuming `v0.10.14` release. 
