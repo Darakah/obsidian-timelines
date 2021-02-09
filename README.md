@@ -19,10 +19,10 @@ For a note to be included in a timeline the following must be valid:
 1. The `timeline` tag must be included in the YAML info of that note
 ```html
 ---
-tags: [timeline, tag1, tag2, tag3]
+tags: [timeline, test, me, now]
 ---
 ```
-2. The note must have all the specified tags to be included in the search (must also be in the YAML info). This note example above will be included if all of the following searches (assuming its timeline span info is valid): `tag1` , `tag1;tag2` , `tag1;tag2;tag3` (and all other combinations) 
+2. The note must have all the specified tags to be included in the search (must also be in the YAML info). This note example above will be included if all of the following searches (assuming its timeline span info is valid): `test` , `test;me` , `test;me;now` (and all other combinations) 
 3. Note must contain a timeline info span (it is not hidden in preview to keep note clean) containing the information to be presented (at least the date must be valid all other fields are optional, a non-valid date will cause the note to be ignored when the timeline is being built)
 
 ```html
