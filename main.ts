@@ -94,9 +94,14 @@ export default class TimelinesPlugin extends Plugin {
 				continue;
 			}
 
+			let noteId;
 			// check if a valid date is specified
-			let noteId = +timelineData[0].dataset.date?.split('-').join('');
-
+			if(timelineData[0].dataset.date[0] == '-'){
+				// if it is a negative year
+				noteId = +timelineData[0].dataset.date.substring(1, timelineData[0].dataset.date.length).split('-').join('') * -1;
+			} else {
+				noteId = +timelineData[0].dataset.date.split('-').join('');
+			}
 			if (!Number.isInteger(noteId)) {
 				continue;
 			}
