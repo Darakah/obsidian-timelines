@@ -6,7 +6,7 @@ Generate a chronological timeline of all notes with the specified set of tags.
 
 ## Inserting a Timeline
 
-1. Write inside a note (where you want the timeline to be inserted) the list of tags (separated by a `;` semi-column) for the notes to be included in the timeline. e.g. `tag1;tag2;tag3` 
+1. Write inside a note (where you want the timeline to be inserted) the list of tags (separated by a `;` semi-colon) for the notes to be included in the timeline. e.g. `tag1;tag2;tag3` 
 2. Select the written tag list
 3. ctrl/cmd + P -> Choose `add timeline` command
 4. The `tag1;tag2;tag3` selected string will be replaced with html that will render the timeline. 
