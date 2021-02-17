@@ -11,6 +11,8 @@ Generate a chronological timeline of all notes with the specified set of tags.
 3. ctrl/cmd + P -> Choose `add timeline` command
 4. The `tag1;tag2;tag3` selected string will be replaced with html that will render the timeline. 
 
+NOTE: if the instructions are still unclear, find a detailed steps by step guide here https://github.com/Darakah/obsidian-timelines/issues/2
+
 ## Example
 ![example](https://raw.githubusercontent.com/Darakah/obsidian-timelines/main/images/exp_2.png)
 
