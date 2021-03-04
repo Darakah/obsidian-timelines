@@ -14,7 +14,7 @@ Before inserting a timeline, each note that is to be included must possess the f
 2. a `timeline info block` which contains the timeline information needed to display the note (explanation of the different parameters can be found below in the README):
 
 ```html
-<span class='ob-timelines' data-date='1444-10-00-00' data-title='TITLE' data-img = 'URL'> D
+<span class='ob-timelines' data-date='1444-10-00-00' data-title='TITLE' data-img = 'URL' data-class = "customCardCSS"> D
   E S C R I P T I O N </span> 
 ```
 3. Write the following render block where a timeline is to be inserted. 
@@ -75,8 +75,19 @@ The note will be ignored in the following cases:
   - If an invalid url is given (an empty black section will be seen for that note card)
   - Currently only `http` & `absolute local path` will render, in the current obsidian release of `v0.10.13` obsidian links for background images are blocked from rendering, hopefully it is promised that this will be removed in the upcuming release. 
 
+### CSS Class:
+  - Optional
+  - Adds the applied css class to the note card associated with this span info block
+
 
 ## Release Notes
+
+### v0.2.1 
+- Remove escaping of `quotes / double quotes and ticks` from title and text (no longer needed)
+- Additional optional span attrictute `css class` allowing to custumize each card of the timeline
+- All spans on a single note will be displayed on the timeline (previously only first span was presented i.e. 1 card event per note)
+
+PR Contribution by https://github.com/ebullient
 
 ### v0.2.0
 - Added `timeline` render block:
