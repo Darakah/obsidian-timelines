@@ -85,7 +85,7 @@ The note will be ignored in the following cases:
 ### v0.2.1 
 - Remove escaping of `quotes / double quotes and ticks` from title and text (no longer needed)
 - Additional optional span attrictute `css class` allowing to custumize each card of the timeline
-- All spans on a single note will be displayed on the timeline (previously only first span was presented i.e. 1 card event per note)
+- `Multiple Events per note` are now allowed. All spans on a single note will be displayed on the timeline (previously only first span was presented i.e. 1 card event per note)
 
 PR Contribution by https://github.com/ebullient
 
