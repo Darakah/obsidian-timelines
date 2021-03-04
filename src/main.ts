@@ -15,7 +15,6 @@ export default class TimelinesPlugin extends Plugin {
 		// Register timeline block renderer
 		this.registerMarkdownCodeBlockProcessor('timeline', async (source, el, ctx) => {
 			const proc = new TimelineProcessor();
-			let args = source.split("\n")
 			await proc.run(source, el, this.settings, this.app.vault.getMarkdownFiles(), this.app.metadataCache, this.app.vault);
 		});
 
