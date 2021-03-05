@@ -99,7 +99,9 @@ PR Contribution by https://github.com/ebullient
 - Removed the `Add Timeline` command as it is no longer needed with the addition of the render block
 
 
+## Support
 
+[<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="BuyMeACoffee" width="100">](https://www.buymeacoffee.com/darakah)
 
 
 
