@@ -166,3 +166,12 @@
     flex-direction: column;
     justify-content: space-between;
 }
+
+.timeline-rendered {
+  color: var(--text-faint);
+  font-size: smaller;
+}
+
+.timeline-rendered::before {
+  content: "Updated: ";
+}

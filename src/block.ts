@@ -1,14 +1,37 @@
 //import Gallery from './svelte/Gallery.svelte'
 import type { TimelinesSettings } from './types';
-import type { TFile, MetadataCache, Vault } from 'obsidian'
+import { RENDER_TIMELINE } from './constants'
+import type { TFile, MarkdownView, MetadataCache, Vault } from 'obsidian'
 import { FilterMDFiles, getElement } from './utils'
 
 export class TimelineProcessor {
 
-	async run(source: string, el: HTMLElement, settings: TimelinesSettings, vaultFiles: TFile[], fileCache: MetadataCache, appVault: Vault) {
 
+	async insertTimelineIntoCurrentNote(sourceView: MarkdownView, settings: TimelinesSettings, vaultFiles: TFile[], fileCache: MetadataCache, appVault: Vault) {
+		let editor = sourceView.sourceMode.cmEditor;
+		if (editor) {
+			const source = editor.getValue();
+			let match = RENDER_TIMELINE.exec(source);
+			if (match) {
+				let tagList = match[1];
+
+				let div = document.createElement('div');
+				let rendered = document.createElement('div');
+				rendered.addClass('timeline-rendered');
+				rendered.setText(new Date().toString());
+
+				div.appendChild(document.createComment(`TIMELINE BEGIN tags='${match[1]}'`));
+				await this.run(tagList, div, settings, vaultFiles, fileCache, appVault);
+				div.appendChild(rendered);
+				div.appendChild(document.createComment('TIMELINE END'));
+
+				editor.setValue(source.replace(match[0], div.innerHTML));
+			}
+		}
+	};
+
+	async run(source: string, el: HTMLElement, settings: TimelinesSettings, vaultFiles: TFile[], fileCache: MetadataCache, appVault: Vault) {
 		let lines = source.trim()
-		let elCanvas = el.createDiv({ cls: 'timeline' });
 
 		if (!lines) return;
 		// Parse the tags to search for the proper files
