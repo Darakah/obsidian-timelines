@@ -2,7 +2,8 @@
 import type { TimelinesSettings, AllNotesData, TimelineArgs } from './types';
 import { RENDER_TIMELINE } from './constants';
 import type { TFile, MarkdownView, MetadataCache, Vault } from 'obsidian';
-import { DataSet, Timeline } from "vis-timeline/standalone";
+import { Timeline } from "vis-timeline/esnext";
+import { DataSet } from "vis-data"
 import "vis-timeline/styles/vis-timeline-graph2d.css";
 import { FilterMDFiles } from './utils';
 
