@@ -192,6 +192,17 @@
     position: fixed !important;
 }
 
+.vis-item-overflow .timeline-card {
+    display: none;
+    width: 300px;
+    height: max-content;
+    position: fixed !important;
+}
+
+.vis-item .vis-item-overflow {
+    overflow: visible;
+}
+
 .vis-item.orange {
     background-color: rgba(255, 0, 0, 0.295);
     filter: none;

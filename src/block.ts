@@ -189,15 +189,42 @@ export class TimelineProcessor {
 				});
 				noteCard.createEl('p', { text: event.innerHTML });
 
+				let startDate = event.date?.replace(/(.*)-\d*$/g, '$1');
+				let start, end;
+				if (startDate[0] == '-') {
+					// handle negative year
+					let startComp = startDate.substring(1, startDate.length).split('-');
+					start = new Date(+`-${startComp[0]}`, +startComp[1], +startComp[2]);
+				} else {
+					start = new Date(startDate);
+				}
+
+				let endDate = event.endDate?.replace(/(.*)-\d*$/g, '$1');
+				if (endDate && endDate[0] == '-') {
+					// handle negative year
+					let endComp = endDate.substring(1, endDate.length).split('-');
+					end = new Date(+`-${endComp[0]}`, +endComp[1], +endComp[2]);
+				} else {
+					end = new Date(endDate);
+				}
+
+				if (start.toString() === 'Invalid Date') {
+					return;
+				}
+
+				if ((event.type === "range" || event.type === "background") && end.toString() === 'Invalid Date') {
+					return;
+				}
+
 				// Add Event data
 				items.add({
 					id: items.length + 1,
 					content: event.title ?? '',
 					title: noteCard.outerHTML,
-					start: event.date.split('-').slice(0, -1).join('-'),
+					start: start,
 					className: event.class ?? '',
 					type: event.type,
-					end: event.endDate?.replace(/(.*)-\d*$/g, '$1') ?? null
+					end: end ?? null
 				});
 			});
 		});
@@ -225,7 +252,7 @@ export class TimelineProcessor {
 
 		// Create a Timeline
 		timeline.setAttribute('class', 'timeline-vis');
-		new Timeline(timeline, items, options);
+		let timelineVisEl = new Timeline(timeline, items, options);
 
 		// Replace the selected tags with the timeline html
 		el.appendChild(timeline);
