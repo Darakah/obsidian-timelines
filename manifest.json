@@ -1,7 +1,7 @@
 {
     "id": "obsidian-timelines",
     "name": "Timelines",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "minAppVersion": "0.10.11",
     "description": "Create a timeline view of all notes with the specified combination of tags",
     "author": "darakah",

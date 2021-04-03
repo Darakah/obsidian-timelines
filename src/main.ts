@@ -1,7 +1,7 @@
-import type { TimelinesSettings } from './types'
-import { DEFAULT_SETTINGS } from './constants'
-import { TimelinesSettingTab } from './settings'
-import { TimelineProcessor } from './block'
+import type { TimelinesSettings } from './types';
+import { DEFAULT_SETTINGS } from './constants';
+import { TimelinesSettingTab } from './settings';
+import { TimelineProcessor } from './block';
 import { Plugin, MarkdownView } from 'obsidian';
 
 export default class TimelinesPlugin extends Plugin {
@@ -15,7 +15,13 @@ export default class TimelinesPlugin extends Plugin {
 		// Register timeline block renderer
 		this.registerMarkdownCodeBlockProcessor('timeline', async (source, el, ctx) => {
 			const proc = new TimelineProcessor();
-			await proc.run(source, el, this.settings, this.app.vault.getMarkdownFiles(), this.app.metadataCache, this.app.vault);
+			await proc.run(source, el, this.settings, this.app.vault.getMarkdownFiles(), this.app.metadataCache, this.app.vault, false);
+		});
+
+		// Register vis-timeline block renderer
+		this.registerMarkdownCodeBlockProcessor('timeline-vis', async (source, el, ctx) => {
+			const proc = new TimelineProcessor();
+			await proc.run(source, el, this.settings, this.app.vault.getMarkdownFiles(), this.app.metadataCache, this.app.vault, true);
 		});
 
 		this.addCommand({

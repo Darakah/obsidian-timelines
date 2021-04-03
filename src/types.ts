@@ -9,6 +9,9 @@ export interface CardContainer {
 	img: string;
 	innerHTML: string;
 	path: string;
+	endDate: string;
+	type: string;
+	class: string;
 }
 
 export type NoteData = CardContainer[];

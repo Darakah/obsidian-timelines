@@ -165,13 +165,55 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    word-break: break-all;
+    white-space: normal;
 }
 
 .timeline-rendered {
-  color: var(--text-faint);
-  font-size: smaller;
+    color: var(--text-faint);
+    font-size: smaller;
 }
 
 .timeline-rendered::before {
-  content: "Updated: ";
+    content: "Updated: ";
+}
+
+
+/* Vis Timeline */
+
+.vis-timeline {
+    border: 1px solid transparent;
+}
+
+.vis-item-content .timeline-card {
+    display: none;
+    width: 300px;
+    height: max-content;
+    position: fixed !important;
+}
+
+.vis-item.orange {
+    background-color: rgba(255, 0, 0, 0.295);
+    filter: none;
+    border-color: orange;
+}
+
+.vis-item.vis-selected.orange {
+    /* custom colors for selected orange items */
+    background-color: orange;
+    border-color: orangered;
+}
+
+.vis-panel.vis-center,
+.vis-panel.vis-left,
+.vis-panel.vis-right {
+    border-color: var(--background-secondary);
+}
+
+.vis-grid.vis-minor {
+    display: none;
+}
+
+.vis-grid.vis-major {
+    display: none;
 }

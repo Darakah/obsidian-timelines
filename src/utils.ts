@@ -1,23 +1,17 @@
-import type { AllNotesData } from './types'
-import type { TFile, MetadataCache } from 'obsidian'
-
-export function getElement(MultiList: AllNotesData, d1: number, d2: number, d3: number) {
-    if (MultiList[d1][d2][d3]) {
-        return MultiList[d1][d2][d3];
-    }
-    return "";
-};
+import type { AllNotesData } from './types';
+import type { TFile, MetadataCache } from 'obsidian';
+import { getAllTags } from 'obsidian';
 
 export function FilterMDFiles(file: TFile, tagList: String[], metadataCache: MetadataCache) {
-    var fileCache = metadataCache.getFileCache(file);
-    let tags = [];
-
-    if (fileCache && fileCache.tags) {
-        tags = fileCache.tags.map(i => i.tag.substring(1,))
+    if (!tagList) {
+        return true;
     }
 
-    if (fileCache.frontmatter && fileCache.frontmatter.tags) {
-        return tagList.every(function (val) { return fileCache.frontmatter.tags.concat(tags).indexOf(val) >= 0; })
+    let tags = getAllTags(metadataCache.getFileCache(file)).map(e => e.slice(1, e.length));
+
+    if (tags && tags.length > 0) {
+        return tagList.every(val => { return tags.indexOf(val as string) >= 0; });
     }
+
     return false;
 }

@@ -1,6 +1,6 @@
 {
     "name": "Timelines",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "description": "Create a timeline view of all notes with the specified combination of tags",
     "main": "main.js",
     "scripts": {
@@ -19,5 +19,9 @@
         "rollup": "^2.32.1",
         "tslib": "^2.0.3",
         "typescript": "^4.0.3"
+    },
+    "dependencies": {
+        "rollup-plugin-styles": "^3.14.1",
+        "vis-timeline": "^7.4.6"
     }
 }
