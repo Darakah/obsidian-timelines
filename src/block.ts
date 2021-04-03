@@ -1,5 +1,5 @@
 //import Gallery from './svelte/Gallery.svelte'
-import type { TimelinesSettings, AllNotesData } from './types';
+import type { TimelinesSettings, AllNotesData, TimelineArgs } from './types';
 import { RENDER_TIMELINE } from './constants';
 import type { TFile, MarkdownView, MetadataCache, Vault } from 'obsidian';
 import { DataSet, Timeline } from "vis-timeline/standalone";
@@ -33,12 +33,32 @@ export class TimelineProcessor {
 	};
 
 	async run(source: string, el: HTMLElement, settings: TimelinesSettings, vaultFiles: TFile[], fileCache: MetadataCache, appVault: Vault, visTimeline: boolean) {
-		let lines = source.trim();
+		
+		let args = {
+			tags: '',
+			divHeight: 400,
+			startDate: '-1000,01,01',
+			endDate: '2100,01,01'
+		};
 
-		if (!lines) return;
-		// Parse the tags to search for the proper files
-		let tagList = lines.split(";");
+		// read arguments
+		if(visTimeline){
+			source.split('\n').map(e => {
+				if (e) {
+					let param = e.trim().split('=');
+					args[param[0]] = param[1]?.trim();
+				}
+			});
+		} else {
+			let lines = source.trim();
+			if (!lines) return;
+			// Parse the tags to search for the proper files
+			args.tags = lines;
+		}
+
+		let tagList = args.tags.split(";");
 		tagList.push(settings.timelineTag);
+
 		// Filter all markdown files to only those containing the tag list
 		let fileList = vaultFiles.filter(file => FilterMDFiles(file, tagList, fileCache));
 		if (!fileList) {
@@ -229,9 +249,11 @@ export class TimelineProcessor {
 			});
 		});
 
+		let startWindow = args.startDate.split(',');
+		let endWindow = args.endDate.split(',');
 		// Configuration for the Timeline
 		let options = {
-			minHeight: 600,
+			minHeight: +args.divHeight,
 			showCurrentTime: false,
 			showTooltips: false,
 			template: function (item: any) {
@@ -246,8 +268,9 @@ export class TimelineProcessor {
 					el.style.setProperty('top', `-${el.clientHeight + 10}px`);
 				});
 				return eventContainer;
-			}
-			//start: '2500-10-10'
+			},
+			start: new Date(+startWindow[0], +startWindow[1], +startWindow[2]),
+			end: new Date(+endWindow[0], +endWindow[1], +endWindow[2])
 		};
 
 		// Create a Timeline

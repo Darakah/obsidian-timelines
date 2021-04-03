@@ -3,6 +3,10 @@ export interface TimelinesSettings {
 	sortDirection: boolean;
 }
 
+export interface TimelineArgs {
+	[key: string]: string
+}
+
 export interface CardContainer {
 	date: string;
 	title: string;
