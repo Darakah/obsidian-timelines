@@ -10,7 +10,7 @@ Generate a chronological timeline of all notes with the specified set of tags.
 ## Inserting a Timeline
 
 Before inserting a timeline, each note that is to be included must possess the following:
-1. the `timeline` tag either in its YAML or inline (a note without a timeline tag is ignored when building a timeline)
+1. the `timeline` tag either in its YAML (a note without a timeline tag is ignored when building a timeline)
 2. a `timeline info block` which contains the timeline information needed to display the note (explanation of the different parameters can be found below in the README):
 
 ```html
