@@ -12,16 +12,28 @@ Generate a chronological timeline of all notes with the specified set of tags.
 
 ## Inserting a Timeline
 
+VIDEO BRIEF EXAMPLE: https://www.youtube.com/watch?v=_gtpZDXWcrM
 
+```html
+<span 
+	  class='ob-timelines' 
+	  data-date='144-43-49-00' 
+	  data-title='Another Event' 
+	  data-class='orange' 
+	  data-img = 'Timeline Example/Timeline_2.jpg' 
+	  data-type='range' 
+	  data-end="2000-10-20-00"> 
+	A second event!
+</span>
+```
+
+
+>>>>>> OLD DESCRIPTION NEEDS TO BE UPDATED
 
 Before inserting a timeline, each note that is to be included must possess the following:
 1. the `timeline` tag either in its YAML (a note without a timeline tag is ignored when building a timeline)
 2. a `timeline info block` which contains the timeline information needed to display the note (explanation of the different parameters can be found below in the README):
 
-```html
-<span class='ob-timelines' data-date='1444-10-00-00' data-title='TITLE' data-img = 'URL' data-class = "customCardCSS"> D
-  E S C R I P T I O N </span> 
-```
 3. Write the following render block where a timeline is to be inserted. 
 
 ![example](https://raw.githubusercontent.com/Darakah/obsidian-timelines/main/images/example_1.png)
