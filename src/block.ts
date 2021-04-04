@@ -1,14 +1,13 @@
 //import Gallery from './svelte/Gallery.svelte'
-import type { TimelinesSettings, AllNotesData, TimelineArgs } from './types';
+import type { TimelinesSettings, AllNotesData } from './types';
 import { RENDER_TIMELINE } from './constants';
 import type { TFile, MarkdownView, MetadataCache, Vault } from 'obsidian';
 import { Timeline } from "vis-timeline/esnext";
-import { DataSet } from "vis-data"
+import { DataSet } from "vis-data";
 import "vis-timeline/styles/vis-timeline-graph2d.css";
-import { FilterMDFiles } from './utils';
+import { FilterMDFiles, createDate, getImgUrl } from './utils';
 
 export class TimelineProcessor {
-
 
 	async insertTimelineIntoCurrentNote(sourceView: MarkdownView, settings: TimelinesSettings, vaultFiles: TFile[], fileCache: MetadataCache, appVault: Vault) {
 		let editor = sourceView.sourceMode.cmEditor;
@@ -34,25 +33,29 @@ export class TimelineProcessor {
 	};
 
 	async run(source: string, el: HTMLElement, settings: TimelinesSettings, vaultFiles: TFile[], fileCache: MetadataCache, appVault: Vault, visTimeline: boolean) {
-		
+
 		let args = {
 			tags: '',
 			divHeight: 400,
-			startDate: '-1000,01,01',
-			endDate: '2100,01,01'
+			startDate: '-1000',
+			endDate: '3000',
+			minDate: '-3000',
+			maxDate: '3000'
 		};
 
 		// read arguments
-		if(visTimeline){
+		if (visTimeline) {
 			source.split('\n').map(e => {
+				e = e.trim();
 				if (e) {
-					let param = e.trim().split('=');
-					args[param[0]] = param[1]?.trim();
+					let param = e.split('=');
+					if (param[1]) {
+						args[param[0]] = param[1]?.trim();
+					}
 				}
 			});
 		} else {
 			let lines = source.trim();
-			if (!lines) return;
 			// Parse the tags to search for the proper files
 			args.tags = lines;
 		}
@@ -105,7 +108,7 @@ export class TimelineProcessor {
 					timelineNotes[noteId][0] = {
 						date: event.dataset.date,
 						title: noteTitle,
-						img: event.dataset.img,
+						img: getImgUrl(appVault.adapter, event.dataset.img),
 						innerHTML: event.innerHTML,
 						path: notePath,
 						class: noteClass,
@@ -118,7 +121,7 @@ export class TimelineProcessor {
 					timelineNotes[noteId][timelineNotes[noteId].length] = {
 						date: event.dataset.date,
 						title: noteTitle,
-						img: event.dataset.img,
+						img: getImgUrl(appVault.adapter, event.dataset.img),
 						innerHTML: event.innerHTML,
 						path: notePath,
 						class: noteClass,
@@ -145,6 +148,16 @@ export class TimelineProcessor {
 			for (let date of timelineDates) {
 				let noteContainer = timeline.createDiv({ cls: 'timeline-container' });
 				let noteHeader = noteContainer.createEl('h2', { text: timelineNotes[date][0].date.replace(/-0*$/g, '').replace(/-0*$/g, '').replace(/-0*$/g, '') });
+				let eventContainer = noteContainer.createDiv({ cls: 'timeline-event-list', attr: { 'style': 'display: block' } });
+
+				noteHeader.addEventListener('click', event => {
+					if (eventContainer.style.getPropertyValue('display') === 'none') {
+						eventContainer.style.setProperty('display', 'block');
+						return;
+					}
+					eventContainer.style.setProperty('display', 'none');
+				});
+
 				if (eventCount % 2 == 0) {
 					// if its even add it to the left
 					noteContainer.addClass('timeline-left');
@@ -160,7 +173,7 @@ export class TimelineProcessor {
 				}
 
 				for (let eventAtDate of timelineNotes[date]) {
-					let noteCard = noteContainer.createDiv({ cls: 'timeline-card' });
+					let noteCard = eventContainer.createDiv({ cls: 'timeline-card' });
 					// add an image only if available
 					if (eventAtDate.img) {
 						noteCard.createDiv({ cls: 'thumb', attr: { style: `background-image: url(${eventAtDate.img});` } });
@@ -250,8 +263,6 @@ export class TimelineProcessor {
 			});
 		});
 
-		let startWindow = args.startDate.split(',');
-		let endWindow = args.endDate.split(',');
 		// Configuration for the Timeline
 		let options = {
 			minHeight: +args.divHeight,
@@ -270,13 +281,15 @@ export class TimelineProcessor {
 				});
 				return eventContainer;
 			},
-			start: new Date(+startWindow[0], +startWindow[1], +startWindow[2]),
-			end: new Date(+endWindow[0], +endWindow[1], +endWindow[2])
+			start: createDate(args.startDate),
+			end: createDate(args.endDate),
+			min: createDate(args.minDate),
+			max: createDate(args.maxDate)
 		};
 
 		// Create a Timeline
 		timeline.setAttribute('class', 'timeline-vis');
-		let timelineVisEl = new Timeline(timeline, items, options);
+		new Timeline(timeline, items, options);
 
 		// Replace the selected tags with the timeline html
 		el.appendChild(timeline);
