@@ -39,6 +39,11 @@ export function createDate(date: string): Date {
  * @param path - image path
  */
 export function getImgUrl(vaultAdaptor: DataAdapter, path: string): string {
+
+    if(!path){
+        return null;
+    }
+
     let regex = new RegExp('^https:\/\/');
     if (path.match(regex)) {
         return path;
