@@ -4,10 +4,15 @@
 
 Generate a chronological timeline of all notes with the specified set of tags. 
 
-## Example
+## Example - Vertical Timeline
 ![example](https://raw.githubusercontent.com/Darakah/obsidian-timelines/main/images/exp_2.png)
 
+## Example - Horizantal Timeline
+![example](https://raw.githubusercontent.com/Darakah/obsidian-timelines/main/images/TimelineVis.png)
+
 ## Inserting a Timeline
+
+
 
 Before inserting a timeline, each note that is to be included must possess the following:
 1. the `timeline` tag either in its YAML (a note without a timeline tag is ignored when building a timeline)
