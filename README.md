@@ -23,10 +23,6 @@ Before inserting a timeline, each note that is to be included must possess the f
 
 the render block takes a single input which is the list of tags by which to filter timeline tagged notes (e.g. in the above example block, ONLY notes with all three tags `timeline`, `test` and `now`).
 
-
-
-NOTE: if the instructions are still unclear (please read the whole README - there is text below the example image), find a detailed step by step guide here https://github.com/Darakah/obsidian-timelines/issues/2
-
 ## Timeline Tagging a note
 For a note to be included in a timeline the following must be valid:
 1. The `timeline` tag must be included in that note
