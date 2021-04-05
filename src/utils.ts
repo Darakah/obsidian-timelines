@@ -1,27 +1,37 @@
 import type { TFile, MetadataCache, DataAdapter } from 'obsidian';
 import { getAllTags } from 'obsidian';
 
+export function parseTag(tag: string, tagList: string[]) {
+	tag = tag.trim();
+
+	// Skip empty tags
+	if (tag.length === 0) {
+		return;
+	}
+
+	// Parse all subtags out of the given tag.
+	// I.e., #hello/i/am would yield [#hello/i/am, #hello/i, #hello]. */
+	tagList.push(tag);
+	while (tag.contains("/")) {
+		tag = tag.substring(0, tag.lastIndexOf("/"));
+		tagList.push(tag);
+	}
+}
+
 export function FilterMDFiles(file: TFile, tagList: String[], metadataCache: MetadataCache) {
+	if (!tagList || tagList.length === 0) {
+		return true;
+	}
 
-    if (tagList.contains("")) {
-        if (tagList.length === 1) {
-            tagList = null;
-        } else {
-            tagList = tagList.splice(tagList.indexOf(""), 1);
-        }
-    }
+	let tags = getAllTags(metadataCache.getFileCache(file)).map(e => e.slice(1, e.length));
 
-    if (!tagList) {
-        return true;
-    }
+	if (tags && tags.length > 0) {
+		let filetags: string[] = [];
+		tags.forEach(tag => parseTag(tag, filetags));
+		return tagList.every(val => { return filetags.indexOf(val as string) >= 0; });
+	}
 
-    let tags = getAllTags(metadataCache.getFileCache(file)).map(e => e.slice(1, e.length));
-
-    if (tags && tags.length > 0) {
-        return tagList.every(val => { return tags.indexOf(val as string) >= 0; });
-    }
-
-    return false;
+	return false;
 }
 
 /**
@@ -29,9 +39,9 @@ export function FilterMDFiles(file: TFile, tagList: String[], metadataCache: Met
  * @date - string date in the format YYYY-MM-DD-HH
  */
 export function createDate(date: string): Date {
-    let dateComp = date.split(',');
-    // cannot simply replace '-' as need to support negative years
-    return new Date(+(dateComp[0] ?? 0), +(dateComp[1] ?? 0), +(dateComp[2] ?? 0), +(dateComp[3] ?? 0));
+	let dateComp = date.split(',');
+	// cannot simply replace '-' as need to support negative years
+	return new Date(+(dateComp[0] ?? 0), +(dateComp[1] ?? 0), +(dateComp[2] ?? 0), +(dateComp[3] ?? 0));
 }
 
 /**
@@ -40,14 +50,14 @@ export function createDate(date: string): Date {
  */
 export function getImgUrl(vaultAdaptor: DataAdapter, path: string): string {
 
-    if(!path){
-        return null;
-    }
+	if (!path) {
+		return null;
+	}
 
-    let regex = new RegExp('^https:\/\/');
-    if (path.match(regex)) {
-        return path;
-    }
+	let regex = new RegExp('^https:\/\/');
+	if (path.match(regex)) {
+		return path;
+	}
 
-    return vaultAdaptor.getResourcePath(path);
+	return vaultAdaptor.getResourcePath(path);
 }
