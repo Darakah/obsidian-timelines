@@ -5,7 +5,7 @@ import type { TFile, MarkdownView, MetadataCache, Vault } from 'obsidian';
 import { Timeline } from "vis-timeline/esnext";
 import { DataSet } from "vis-data";
 import "vis-timeline/styles/vis-timeline-graph2d.css";
-import { FilterMDFiles, createDate, getImgUrl } from './utils';
+import { FilterMDFiles, createDate, getImgUrl, parseTag } from './utils';
 
 export class TimelineProcessor {
 
@@ -60,7 +60,8 @@ export class TimelineProcessor {
 			args.tags = lines;
 		}
 
-		let tagList = args.tags.split(";");
+		let tagList: string[] = [];
+		args.tags.split(";").forEach(tag => parseTag(tag, tagList));
 		tagList.push(settings.timelineTag);
 
 		// Filter all markdown files to only those containing the tag list
