@@ -101,7 +101,7 @@ export class TimelineProcessor {
 				let noteTitle = event.dataset.title ?? file.name;
 				let noteClass = event.dataset.class ?? "";
 				let notePath = '/' + file.path;
-				let type = event.dataset.type ?? "";
+				let type = event.dataset.type ?? "box";
 				let endDate = event.dataset.end ?? null;
 
 				if (!timelineNotes[noteId]) {
