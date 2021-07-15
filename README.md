@@ -113,7 +113,7 @@ PR Contribution by https://github.com/ebullient
 
 ## Licence
 
-The source code of this library is licenced under the MIT License.
+Licenced under the MIT License.
 
 ## Support
 
