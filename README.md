@@ -111,6 +111,9 @@ PR Contribution by https://github.com/ebullient
 
 - Removed the `Add Timeline` command as it is no longer needed with the addition of the render block
 
+## Licence
+
+The source code of this library is licenced under the MIT License.
 
 ## Support
 
