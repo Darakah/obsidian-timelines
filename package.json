@@ -1,6 +1,6 @@
 {
     "name": "Timelines",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "description": "Create a timeline view of all notes with the specified combination of tags",
     "main": "main.js",
     "scripts": {
@@ -15,7 +15,7 @@
         "@rollup/plugin-node-resolve": "^9.0.0",
         "@rollup/plugin-typescript": "^6.0.0",
         "@types/node": "^14.14.2",
-        "obsidian": "https://github.com/obsidianmd/obsidian-api/tarball/master",
+        "obsidian": "^0.12.11",
         "rollup": "^2.32.1",
         "tslib": "^2.0.3",
         "typescript": "^4.0.3"
