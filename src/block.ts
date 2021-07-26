@@ -100,7 +100,7 @@ export class TimelineProcessor {
 				// if not title is specified use note name
 				let noteTitle = event.dataset.title ?? file.name.replace(/\.md$/g, '');
 				let noteClass = event.dataset.class ?? "";
-				let notePath = '/' + file.path;
+				let notePath = event.dataset.path ?? '/' + file.path;
 				let type = event.dataset.type ?? "box";
 				let endDate = event.dataset.end ?? null;
 				let era = event.dataset.era ?? null;

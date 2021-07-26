@@ -97,13 +97,18 @@ The note will be ignored in the following cases:
   - Optional
   - Adds the applied css class to the note card associated with this span info block
 
+### Path:
+  - Optional
+  - An alternate path to link the title to (excluding `[[` and `]]`). Default to the note the event is defined in, but you can use this to specify other notes or link to headers or blocks internally within the note. For example, `data-path='My Note#Event Subhead'` would link directly to the `Event Subhead` header in `My Note`
+  - If you use the "Page preview" plugin, this contents of this header will display when hovering over the title. Useful for quickly viewing expanded details without leaving the current timeline.
 
 ## Release Notes
 
 ### v0.3.3
 - Added optional span attribute 'era', allowing an era suffix to be displayed on the timeline.
 - Updated `package.json` to latest obsidian API standard.atch
-- Removes the `.md` extension when auto-filling the title 
+- Removes the `.md` extension when auto-filling the title
+- Ability to specify an alternative path to link the event to.
 
 ### v0.2.1 
 - Remove escaping of `quotes / double quotes and ticks` from title and text (no longer needed)
