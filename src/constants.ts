@@ -5,4 +5,4 @@ export const DEFAULT_SETTINGS: TimelinesSettings = {
     sortDirection: true
 }
 
-export const RENDER_TIMELINE: RegExp = /<!--TIMELINE BEGIN tags=['"]([^"]*?)['"]-->(.*)+?<!--TIMELINE END-->/im;
+export const RENDER_TIMELINE: RegExp = /<!--TIMELINE BEGIN tags=['"]([^"]*?)['"]-->([\s\S]*?)<!--TIMELINE END-->/i;
