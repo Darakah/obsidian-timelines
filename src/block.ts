@@ -118,8 +118,7 @@ export class TimelineProcessor {
 					};
 					timelineDates.push(noteId);
 				} else {
-					// if note_id already present append to it
-					timelineNotes[noteId][timelineNotes[noteId].length] = {
+					let note = {
 						date: event.dataset.date,
 						title: noteTitle,
 						img: getImgUrl(appVault.adapter, event.dataset.img),
@@ -129,6 +128,13 @@ export class TimelineProcessor {
 						type: type,
 						endDate: endDate
 					};
+					// if note_id already present prepend or append to it
+					if (settings.sortDirection) {
+						timelineNotes[noteId].unshift(note);
+					} else {
+						timelineNotes[noteId].push(note);
+					}
+					console.debug("Repeat date: %o", timelineNotes[noteId]);
 				}
 			}
 		}
