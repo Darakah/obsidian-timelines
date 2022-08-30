@@ -25,7 +25,19 @@ Create the following code block where a timeline is to be inserted:
 
 ![example](https://raw.githubusercontent.com/Darakah/obsidian-timelines/main/images/example_1.png)
 
-the render block takes a single input which is the list of tags by which to filter timeline tagged notes (e.g. in the above example block, ONLY notes with all three tags `timeline`, `test` and `now`).
+You can also have an horizontal timeline by:
+
+1. Replacing `timeline` with `timeline-vis` in the code block,
+2. Add bellow filters:
+```timeline-vis
+tags=test
+startDate=1700
+endDate=2030
+fivHeight=600
+minDate=200
+```
+
+The render block takes a single input which is the list of tags by which to filter timeline tagged notes (e.g. in the above example block, ONLY notes with all three tags `timeline`, `test` and `now`).
 
 ### Using an HTML code block for static rendering
 
