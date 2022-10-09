@@ -98,11 +98,12 @@ export class TimelineProcessor {
 					continue;
 				}
 				// if not title is specified use note name
-				let noteTitle = event.dataset.title ?? file.name;
+				let noteTitle = event.dataset.title ?? file.name.replace(/\.md$/g, '')
 				let noteClass = event.dataset.class ?? "";
-				let notePath = '/' + file.path;
+				let notePath = event.dataset.path ?? '/' + file.path;
 				let type = event.dataset.type ?? "box";
 				let endDate = event.dataset.end ?? null;
+				let era = event.dataset.era ?? null;
 
 				if (!timelineNotes[noteId]) {
 					timelineNotes[noteId] = [];
@@ -114,7 +115,8 @@ export class TimelineProcessor {
 						path: notePath,
 						class: noteClass,
 						type: type,
-						endDate: endDate
+						endDate: endDate,
+						era: era
 					};
 					timelineDates.push(noteId);
 				} else {
@@ -126,7 +128,8 @@ export class TimelineProcessor {
 						path: notePath,
 						class: noteClass,
 						type: type,
-						endDate: endDate
+						endDate: endDate,
+						era: era
 					};
 					// if note_id already present prepend or append to it
 					if (settings.sortDirection) {
