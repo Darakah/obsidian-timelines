@@ -152,11 +152,21 @@ For statically generated timelines, events that occur at the same time are group
   - If an invalid url is given, an empty black section will be seen for that note card
   - Currently only `http` & `absolute local path` will render. Obsidian release `v0.10.13` blocked obsidian links for background images. 
 
+### Era:
+  - Optional
+  - Adds this text to the date span in the timeline as an era designation. Useful for fictional calendars.
+  - Applied after the date is formatted. So `2300-00-00-00` with the era set to `AB` would display `2300 AB`.
+
 ### CSS Class:
   - Optional
   - Adds the applied css class to the note card associated with the timeline entry
 
 ## Release Notes
+
+### v0.3.3
+- Added optional span attribute 'era', allowing an era suffix to be displayed on the timeline.
+- Updated `package.json` to latest obsidian API standard.atch
+- Removes the `.md` extension when auto-filling the title 
 
 ### v0.2.1 
 - Remove escaping of `quotes / double quotes and ticks` from title and text (no longer needed)
