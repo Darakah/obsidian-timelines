@@ -50,7 +50,7 @@ export class TimelineProcessor {
 				if (e) {
 					let param = e.split('=');
 					if (param[1]) {
-						args[param[0]] = param[1]?.trim();
+						args:[param[0]] = param[1]?.trim();
 					}
 				}
 			});
@@ -157,7 +157,11 @@ export class TimelineProcessor {
 			// Build the timeline html element
 			for (let date of timelineDates) {
 				let noteContainer = timeline.createDiv({ cls: 'timeline-container' });
-				let noteHeader = noteContainer.createEl('h2', { text: timelineNotes[date][0].date.replace(/-0*$/g, '').replace(/-0*$/g, '').replace(/-0*$/g, '') });
+				let dateText = timelineNotes[date][0].date.replace(/-0*$/g, '').replace(/-0*$/g, '').replace(/-0*$/g, '');
+				if (timelineNotes[date][0].era) {
+						dateText = dateText.concat(' ' + timelineNotes[date][0].era)
+				}
+				let noteHeader = noteContainer.createEl('h2', { text: dateText });
 				let eventContainer = noteContainer.createDiv({ cls: 'timeline-event-list', attr: { 'style': 'display: block' } });
 
 				noteHeader.addEventListener('click', event => {
