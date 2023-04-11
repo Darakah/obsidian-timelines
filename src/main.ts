@@ -1,3 +1,4 @@
+// Filename: main.ts
 import type { TimelinesSettings } from './types';
 import { DEFAULT_SETTINGS } from './constants';
 import { TimelinesSettingTab } from './settings';

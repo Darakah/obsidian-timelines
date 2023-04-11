@@ -1,3 +1,4 @@
+// Filename: utils.ts
 import type { TFile, MetadataCache, DataAdapter } from 'obsidian';
 import { getAllTags } from 'obsidian';
 

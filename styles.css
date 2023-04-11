@@ -205,7 +205,7 @@
 }
 
 .vis-item.orange {
-    background-color: rgba(255, 0, 0, 0.295);
+    background-color: rgba(255, 116, 0, 0.63);
     filter: none;
     border-color: orange;
 }
@@ -258,4 +258,9 @@
     cursor: text;
     font-family: "Comic Sans MS" !important;
     font-size: 15px !important;
+}
+
+/* Vis Timeline show linked note */
+.vis-item-overflow {
+    overflow: visible !important;
 }

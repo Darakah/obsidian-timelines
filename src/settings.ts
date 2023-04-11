@@ -1,4 +1,5 @@
-import { App, PluginSettingTab, Setting } from 'obsidian'
+// Filename: settings.ts
+import {App, PluginSettingTab, Setting} from 'obsidian'
 import TimelinesPlugin from './main'
 
 export class TimelinesSettingTab extends PluginSettingTab {
@@ -10,10 +11,10 @@ export class TimelinesSettingTab extends PluginSettingTab {
 	}
 
 	display(): void {
-		let { containerEl } = this;
+		let {containerEl} = this;
 
 		containerEl.empty();
-		containerEl.createEl('h2', { text: 'Obsidian Timelines Settings' });
+		containerEl.createEl('h2', {text: 'Obsidian Timelines Settings'});
 
 		new Setting(containerEl)
 			.setName('Default timeline tag')
@@ -36,5 +37,16 @@ export class TimelinesSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				});
 			})
+
+		new Setting(containerEl)
+			.setName("Use frontmatter for event metadata")
+			.setDesc("When enabled, the plugin will use the frontmatter for event metadata.")
+			.addToggle((toggle) => {
+				toggle.setValue(this.plugin.settings.useFrontmatter);
+				toggle.onChange(async (value) => {
+					this.plugin.settings.useFrontmatter = value;
+					await this.plugin.saveSettings();
+			});
+		})
 	}
 }
