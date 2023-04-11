@@ -2,7 +2,6 @@
 export interface TimelinesSettings {
 	timelineTag: string;
 	sortDirection: boolean;
-	useFrontmatter: boolean;
 }
 
 export interface TimelineArgs {

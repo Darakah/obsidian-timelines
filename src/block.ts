@@ -102,6 +102,7 @@ export class TimelineProcessor {
 						eventContainer.style.setProperty('display', 'block');
 						return;
 					}
+					// TODO: Stop Propagation: don't close when note-card is clicked
 					eventContainer.style.setProperty('display', 'none');
 				});
 
