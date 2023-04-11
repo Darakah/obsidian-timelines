@@ -10,7 +10,7 @@ import { FilterMDFiles, createDate, getImgUrl, parseTag } from './utils';
 export class TimelineProcessor {
 
 	async insertTimelineIntoCurrentNote(sourceView: MarkdownView, settings: TimelinesSettings, vaultFiles: TFile[], fileCache: MetadataCache, appVault: Vault) {
-		let editor = sourceView.sourceMode.cmEditor;
+		let editor = sourceView.editor;
 		if (editor) {
 			const source = editor.getValue();
 			let match = RENDER_TIMELINE.exec(source);
@@ -50,6 +50,7 @@ export class TimelineProcessor {
 				if (e) {
 					let param = e.split('=');
 					if (param[1]) {
+						// @ts-ignore
 						args[param[0]] = param[1]?.trim();
 					}
 				}
