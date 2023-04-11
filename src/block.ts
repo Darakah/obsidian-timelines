@@ -1,8 +1,8 @@
 // Filename:  block.ts
 //import Gallery from './svelte/Gallery.svelte'
-import type {AllNotesData, TimelinesSettings} from './types';
+import type {AllNotesData, NoteData, TimelinesSettings} from './types';
 import {RENDER_TIMELINE} from './constants';
-import type {MarkdownView, MetadataCache, TFile, Vault,} from 'obsidian';
+import type {FrontMatterCache, MarkdownView, MetadataCache, TFile, Vault,} from 'obsidian';
 import {Notice} from 'obsidian';
 import {Timeline} from "vis-timeline/esnext";
 import {DataSet} from "vis-data";
@@ -77,134 +77,7 @@ export class TimelineProcessor {
 		// Keep only the files that have the time info
 		let timeline = document.createElement('div');
 		timeline.setAttribute('class', 'timeline');
-		let timelineNotes = [] as AllNotesData;
-		let timelineDates = [];
-
-
-		for (let file of fileList) {
-			const metadata = fileCache.getFileCache(file);
-			let frontmatter = metadata.frontmatter;
-
-			if (settings.useFrontmatter && frontmatter) {
-				let startDate = frontmatter?.["start-date"];
-				if (!startDate) {
-					new Notice(`No date found for ${file.name}`);
-					continue;
-				}
-
-				let noteId;
-				// check if a valid date is specified
-				if (startDate[0] == '-') {
-					// if it is a negative year
-					noteId = +startDate.substring(1, startDate.length).split('-').join('') * -1;
-				} else {
-					noteId = +startDate.split('-').join('');
-				}
-				if (!Number.isInteger(noteId)) {
-					continue;
-				}
-				// if not title is specified use note name
-				let noteTitle = frontmatter["title"] ?? file.name;
-				let noteClass = frontmatter["color"] ?? "";
-				let notePath = '/' + file.path;
-				let type = frontmatter["type"] ?? "box"; // TODO: if endDate exists, make it a range
-				let endDate = frontmatter["end-date"] ?? null;
-
-				if (!timelineNotes[noteId]) {
-					timelineNotes[noteId] = [];
-					timelineNotes[noteId][0] = {
-						date: startDate,
-						title: noteTitle,
-						img: getImgUrl(appVault.adapter, frontmatter["image"]),
-						innerHTML: frontmatter["html"] ?? "", // TODO: await app.vault.read(file)
-						path: notePath,
-						class: noteClass,
-						type: type,
-						endDate: endDate
-					};
-					timelineDates.push(noteId);
-				} else {
-					let note = {
-						date: startDate,
-						title: noteTitle,
-						img: getImgUrl(appVault.adapter, frontmatter["image"]),
-						innerHTML: frontmatter["html"] ?? "",
-						path: notePath,
-						class: noteClass,
-						type: type,
-						endDate: endDate
-					};
-					// if note_id already present prepend or append to it
-					if (settings.sortDirection) {
-						timelineNotes[noteId].unshift(note);
-					} else {
-						timelineNotes[noteId].push(note);
-					}
-					console.debug("Repeat date: %o", timelineNotes[noteId]);
-				}
-			} else {
-				// Create a DOM Parser
-				const domparser = new DOMParser();
-				const doc = domparser.parseFromString(await appVault.read(file), 'text/html');
-				let timelineData = doc.getElementsByClassName('ob-timelines');
-				for (let event of timelineData as any) {
-					if (!(event instanceof HTMLElement)) {
-						continue;
-					}
-
-					let noteId;
-					// check if a valid date is specified
-					if (event.dataset.date[0] == '-') {
-						// if it is a negative year
-						noteId = +event.dataset.date.substring(1, event.dataset.date.length).split('-').join('') * -1;
-					} else {
-						noteId = +event.dataset.date.split('-').join('');
-					}
-					if (!Number.isInteger(noteId)) {
-						continue;
-					}
-					// if not title is specified use note name
-					let noteTitle = event.dataset.title ?? file.name;
-					let noteClass = event.dataset.class ?? "";
-					let notePath = '/' + file.path;
-					let type = event.dataset.type ?? "box";
-					let endDate = event.dataset.end ?? null;
-
-					if (!timelineNotes[noteId]) {
-						timelineNotes[noteId] = [];
-						timelineNotes[noteId][0] = {
-							date: event.dataset.date,
-							title: noteTitle,
-							img: getImgUrl(appVault.adapter, event.dataset.img),
-							innerHTML: event.innerHTML,
-							path: notePath,
-							class: noteClass,
-							type: type,
-							endDate: endDate
-						};
-						timelineDates.push(noteId);
-					} else {
-						let note = {
-							date: event.dataset.date,
-							title: noteTitle,
-							img: getImgUrl(appVault.adapter, event.dataset.img),
-							innerHTML: event.innerHTML,
-							path: notePath,
-							class: noteClass,
-							type: type,
-							endDate: endDate
-						};
-						// if note_id already present prepend or append to it
-						if (settings.sortDirection) {
-							timelineNotes[noteId].unshift(note);
-						} else {
-							timelineNotes[noteId].push(note);
-						}
-						console.debug("Repeat date: %o", timelineNotes[noteId]);
-					}
-				}
-			}
-		}
+		let [timelineNotes, timelineDates] = await getTimelineData(fileList, settings, fileCache, appVault);
 
 		// Sort events based on setting
 		if (settings.sortDirection) {
@@ -369,3 +242,80 @@ export class TimelineProcessor {
 		el.appendChild(timeline);
 	}
 }
+
+async function getTimelineData(fileList: TFile[], settings: TimelinesSettings, fileCache: MetadataCache, appVault: Vault): Promise<[NoteData[], number[]]> {
+	const timeline = document.createElement('div');
+	timeline.classList.add('timeline');
+	const timelineNotes: AllNotesData = [];
+	const timelineDates: number[] = [];
+
+	for (const file of fileList) {
+		const metadata = fileCache.getFileCache(file);
+		const frontmatter = metadata.frontmatter;
+		const doc = new DOMParser().parseFromString(await appVault.read(file), 'text/html');
+		// If there are no timelineData elements, add a default "dummy" element to capture data from the frontmatter
+		const timelineData = doc.getElementsByClassName('ob-timelines').length > 0 ? doc.getElementsByClassName('ob-timelines') : [doc.createElement('div')];
+
+		// @ts-ignore
+		for (let event of timelineData) {
+			if (!(event instanceof HTMLElement)) continue;
+
+			const [startDate, noteTitle, noteClass, notePath, type, endDate] = getFrontmatterData(frontmatter, event, file);
+
+			let noteId;
+			if (startDate[0] == '-') {
+				noteId = +startDate.substring(1).split('-').join('') * -1;
+			} else {
+				noteId = +startDate.split('-').join('');
+			}
+
+			if (!Number.isInteger(noteId)) continue;
+
+			const note = {
+				date: startDate,
+				title: noteTitle,
+				img: getImgUrl(appVault.adapter, event.dataset.img) ?? getImgUrl(appVault.adapter, frontmatter?.image),
+				innerHTML: event.innerHTML ?? frontmatter?.html ?? '',
+				path: notePath,
+				class: noteClass,
+				type: type,
+				endDate: endDate
+			};
+
+			if (!timelineNotes[noteId]) {
+				timelineNotes[noteId] = [note];
+				timelineDates.push(noteId);
+			} else {
+				const insertIndex = settings.sortDirection ? 0 : timelineNotes[noteId].length;
+				timelineNotes[noteId].splice(insertIndex, 0, note);
+			}
+		}
+	}
+
+	return [timelineNotes, timelineDates];
+}
+
+function getFrontmatterData(frontmatter: FrontMatterCache | null, event: HTMLElement, file: TFile): [string, string, string, string, string, string | null] {
+	if (frontmatter) {
+		const startDate = event.dataset.date ?? frontmatter["start-date"];
+		if (!startDate) {
+			new Notice(`No date found for ${file.name}`);
+			return ['', '', '', '', '', ''];
+		}
+		const noteTitle = event.dataset.title ?? frontmatter["title"] ?? file.name.replace(".md", "");
+		const noteClass = event.dataset.class ?? frontmatter["color"] ?? '';
+		const notePath = '/' + file.path;
+		const type = event.dataset.type ?? frontmatter["type"] ?? 'box';
+		const endDate = event.dataset.end ?? frontmatter["end-date"] ??  null;
+		return [startDate, noteTitle, noteClass, notePath, type, endDate];
+	}
+	return [
+		event.dataset.date ?? '',
+		event.dataset.title ?? file.name.replace(".md", ""),
+		event.dataset.class ?? '',
+		'/' + file.path,
+		event.dataset.type ?? 'box',
+		event.dataset.end ?? null
+	];
+}
+
