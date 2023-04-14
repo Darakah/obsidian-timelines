@@ -137,6 +137,10 @@ export class TimelineProcessor {
 							text: eventAtDate.title
 						});
 					noteCard.createEl('p', { text: eventAtDate.innerHTML });
+					noteCard.addEventListener('click', function(event) {
+						const workspace = window.app.workspace;
+						workspace.openLinkText(`${eventAtDate.path}`, '', true );
+					});
 				}
 				eventCount++;
 			}
@@ -206,7 +210,8 @@ export class TimelineProcessor {
 					start: start,
 					className: event.class ?? '',
 					type: event.type,
-					end: end ?? null
+					end: end ?? null,
+					path: event.path
 				});
 			});
 		});
@@ -218,7 +223,9 @@ export class TimelineProcessor {
 			showTooltips: false,
 			template: function (item: any) {
 
-				let eventContainer = document.createElement('div');
+				let eventContainer = document.createElement('a');
+				eventContainer.addClass('internal-link');
+				eventContainer.href = item.path;
 				eventContainer.setText(item.content);
 				let eventCard = eventContainer.createDiv();
 				eventCard.outerHTML = item.title;

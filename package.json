@@ -22,6 +22,6 @@
     },
     "dependencies": {
         "rollup-plugin-styles": "^3.14.1",
-        "vis-timeline": "^7.4.6"
+        "vis-timeline": "^7.7.2"
     }
 }
