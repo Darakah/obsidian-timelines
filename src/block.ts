@@ -1,7 +1,6 @@
-// Filename:  block.ts
 //import Gallery from './svelte/Gallery.svelte'
 import type {AllNotesData, NoteData, TimelinesSettings} from './types';
-import {RENDER_TIMELINE} from './constants';
+import {Args, FrontmatterKeys, RENDER_TIMELINE} from './constants';
 import type {FrontMatterCache, MarkdownView, MetadataCache, TFile, Vault,} from 'obsidian';
 import {Notice} from 'obsidian';
 import {Timeline} from "vis-timeline/esnext";
@@ -36,7 +35,7 @@ export class TimelineProcessor {
 
 	async run(source: string, el: HTMLElement, settings: TimelinesSettings, vaultFiles: TFile[], fileCache: MetadataCache, appVault: Vault, visTimeline: boolean) {
 
-		let args = {
+		let args: Args = {
 			tags: '',
 			divHeight: 400,
 			startDate: '-1000',
@@ -52,15 +51,13 @@ export class TimelineProcessor {
 				if (e) {
 					let param = e.split('=');
 					if (param[1]) {
-						// @ts-ignore
 						args[param[0]] = param[1]?.trim();
 					}
 				}
 			});
 		} else {
-			let lines = source.trim();
 			// Parse the tags to search for the proper files
-			args.tags = lines;
+			args.tags = source.trim();
 		}
 
 		let tagList: string[] = [];
@@ -102,7 +99,9 @@ export class TimelineProcessor {
 						eventContainer.style.setProperty('display', 'block');
 						return;
 					}
-					// TODO: Stop Propagation: don't close when note-card is clicked
+					// TODO: Stop Propagation: don't close timeline-card when clicked.
+					//  `vis-timeline-graph2d.js` contains a method called `_updateContents` that makes the display
+					//  attribute disappear on click via line 7426: `element.innerHTML = '';`
 					eventContainer.style.setProperty('display', 'none');
 				});
 
@@ -137,10 +136,6 @@ export class TimelineProcessor {
 							text: eventAtDate.title
 						});
 					noteCard.createEl('p', { text: eventAtDate.innerHTML });
-					noteCard.addEventListener('click', function(event) {
-						const workspace = window.app.workspace;
-						workspace.openLinkText(`${eventAtDate.path}`, '', true );
-					});
 				}
 				eventCount++;
 			}
@@ -270,7 +265,7 @@ async function getTimelineData(fileList: TFile[], settings: TimelinesSettings, f
 		for (let event of timelineData) {
 			if (!(event instanceof HTMLElement)) continue;
 
-			const [startDate, noteTitle, noteClass, notePath, type, endDate] = getFrontmatterData(frontmatter, event, file);
+			const [startDate, noteTitle, noteClass, notePath, type, endDate] = getFrontmatterData(frontmatter, settings.frontmatterKeys, event, file);
 
 			let noteId;
 			if (startDate[0] == '-') {
@@ -305,27 +300,26 @@ async function getTimelineData(fileList: TFile[], settings: TimelinesSettings, f
 	return [timelineNotes, timelineDates];
 }
 
-function getFrontmatterData(frontmatter: FrontMatterCache | null, event: HTMLElement, file: TFile): [string, string, string, string, string, string | null] {
-	if (frontmatter) {
-		const startDate = event.dataset.date ?? frontmatter["start-date"];
-		if (!startDate) {
-			new Notice(`No date found for ${file.name}`);
-			return ['', '', '', '', '', ''];
-		}
-		const noteTitle = event.dataset.title ?? frontmatter["title"] ?? file.name.replace(".md", "");
-		const noteClass = event.dataset.class ?? frontmatter["color"] ?? '';
-		const notePath = '/' + file.path;
-		const type = event.dataset.type ?? frontmatter["type"] ?? 'box';
-		const endDate = event.dataset.end ?? frontmatter["end-date"] ??  null;
-		return [startDate, noteTitle, noteClass, notePath, type, endDate];
+function getFrontmatterData(frontmatter: FrontMatterCache | null, frontmatterKeys: FrontmatterKeys, event: HTMLElement, file: TFile): [string, string, string, string, string, string | null] {
+	const startDate = event.dataset.date ?? findMatchingFrontmatterKey(frontmatter, frontmatterKeys.startDateKey);
+	if (!startDate) {
+		new Notice(`No date found for ${file.name}`);
+		return ['', '', '', '', '', ''];
 	}
-	return [
-		event.dataset.date ?? '',
-		event.dataset.title ?? file.name.replace(".md", ""),
-		event.dataset.class ?? '',
-		'/' + file.path,
-		event.dataset.type ?? 'box',
-		event.dataset.end ?? null
-	];
+	const noteTitle = event.dataset.title ?? findMatchingFrontmatterKey(frontmatter, frontmatterKeys.titleKey) ?? file.name.replace(".md", "");
+	const noteClass = event.dataset.class ?? frontmatter["color"] ?? '';
+	const notePath = '/' + file.path;
+	const type = event.dataset.type ?? frontmatter["type"] ?? 'box';
+	const endDate = event.dataset.end ?? findMatchingFrontmatterKey(frontmatter, frontmatterKeys.endDateKey) ??  null;
+	return [startDate, noteTitle, noteClass, notePath, type, endDate];
 }
 
+function findMatchingFrontmatterKey(frontmatter: FrontMatterCache | null, keys: string[]) {
+	for (const key of keys) {
+		if (frontmatter && frontmatter[key]) {
+			return frontmatter[key];
+		}
+	}
+	console.log(`No matching key found for ${keys}`)
+	return null;
+}

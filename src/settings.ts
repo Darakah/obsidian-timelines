@@ -1,4 +1,3 @@
-// Filename: settings.ts
 import {App, PluginSettingTab, Setting} from 'obsidian'
 import TimelinesPlugin from './main'
 
@@ -48,5 +47,43 @@ export class TimelinesSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				});
 			})
+
+		containerEl.createEl('h5', { text: "Customize Frontmatter Keys" }).appendChild(
+			createEl("p", {
+				text: "Specify the front matter keys used to extract start dates, end dates, and titles for the timeline notes. Defaults to 'start-date', 'end-date', and 'title'.",
+				cls: "setting-item-description"
+			})
+		);
+
+		new Setting(containerEl)
+			.setName('Start Date Keys')
+			.setDesc('Comma-separated list of frontmatter keys for start date. Example: start-date,fc-date')
+			.addText(text => text
+				.setPlaceholder(this.plugin.settings.frontmatterKeys.startDateKey.join(','))
+				.onChange(async (value) => {
+					this.plugin.settings.frontmatterKeys.startDateKey = value.split(',');
+					await this.plugin.saveSettings();
+				}));
+
+		new Setting(containerEl)
+			.setName('End Date Keys')
+			.setDesc('Comma-separated list of frontmatter keys for end date.')
+			.addText(text => text
+				.setPlaceholder(this.plugin.settings.frontmatterKeys.endDateKey.join(','))
+				.onChange(async (value) => {
+					this.plugin.settings.frontmatterKeys.endDateKey = value.split(',');
+					await this.plugin.saveSettings();
+				}));
+
+		new Setting(containerEl)
+			.setName('Title Keys')
+			.setDesc('Comma-separated list of frontmatter keys for title.')
+			.addText(text => text
+				.setPlaceholder(this.plugin.settings.frontmatterKeys.titleKey.join(','))
+				.onChange(async (value) => {
+					this.plugin.settings.frontmatterKeys.titleKey = value.split(',');
+					await this.plugin.saveSettings();
+				}));
+
 	}
 }

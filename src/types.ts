@@ -1,8 +1,10 @@
-// Filename: types.ts
+import {FrontmatterKeys} from "./constants";
+
 export interface TimelinesSettings {
 	timelineTag: string;
 	sortDirection: boolean;
 	notePreviewOnHover: boolean;
+	frontmatterKeys: FrontmatterKeys;
 }
 
 export interface TimelineArgs {

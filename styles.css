@@ -203,6 +203,7 @@
 .vis-item .vis-item-overflow {
     overflow: visible;
 }
+
 div.vis-item-content > a,
 div.vis-item-overflow > div > a {
   text-decoration: none !important;
@@ -210,19 +211,24 @@ div.vis-item-overflow > div > a {
   padding: 6px;
 }
 
-div.vis-item-content > a:hover,
-div.vis-item-overflow > div > a:hover {
-  -webkit-text-fill-color: white;
+.vis-item:hover div.vis-item-content > a,
+.vis-item:hover div.vis-item-overflow > div > a,
+.vis-item.vis-selected div.vis-item-content > a,
+.vis-item.vis-selected div.vis-item-overflow > div > a {
   font-weight: bold;
 }
 
+.vis-item {
+  cursor: pointer;
+  box-sizing: border-box !important;
+}
 
 .vis-item.orange {
-    background-color: rgba(255, 116, 0, 0.63);
+    background-color: rgb(255, 116, 0);
     filter: none;
     border-color: orange;
 }
-
+.vis-item.orange:hover,
 .vis-item.vis-selected.orange {
     /* custom colors for selected orange items */
     background-color: orange;
@@ -235,10 +241,10 @@ div.vis-item-overflow > div > a:hover {
   border-color: #628934;
 }
 
+.vis-item.green:hover,
 .vis-item.vis-selected.green {
-  /* custom colors for selected orange items */
-  background-color: rgba(139, 195, 74, 0.7);
-  border-color: rgba(98, 137, 52, 0.7);
+  background-color: rgb(139, 195, 74);
+  border-color: #628934;
 }
 
 .vis-item.pink {
@@ -246,11 +252,10 @@ div.vis-item-overflow > div > a:hover {
   filter: none;
   border-color: #ab5353;
 }
-
+.vis-item.pink:hover,
 .vis-item.vis-selected.pink {
-  /* custom colors for selected orange items */
-  background-color: rgba(229, 115, 115, 0.7);
-  border-color: rgba(171, 83, 83, 0.7);
+  background-color: rgb(249, 115, 115);
+  border-color: rgb(191, 83, 83);
 }
 
 .vis-item.yellow {
@@ -258,11 +263,10 @@ div.vis-item-overflow > div > a:hover {
   filter: none;
   border-color: #b38705;
 }
-
+.vis-item.yellow:hover,
 .vis-item.vis-selected.yellow {
-  /* custom colors for selected orange items */
-  background-color: rgba(255, 193, 7, 0.7);
-  border-color: rgba(179, 135, 5, 0.7);
+  background-color: rgb(255, 213, 7);
+  border-color: rgb(179, 155, 5);
 }
 
 .vis-item.blue {
@@ -271,10 +275,10 @@ div.vis-item-overflow > div > a:hover {
   border-color: #0277ab;
 }
 
+.vis-item.blue:hover,
 .vis-item.vis-selected.blue {
-  /* custom colors for selected orange items */
-  background-color: rgba(3, 169, 244, 0.5);
-  border-color: rgba(2, 119, 171, 0.5);
+  background-color: rgb(3, 189, 244);
+  border-color: rgb(2, 139, 171);
 }
 
 .vis-item.gray {
@@ -283,10 +287,10 @@ div.vis-item-overflow > div > a:hover {
   border-color: #66757c;
 }
 
+.vis-item.gray:hover,
 .vis-item.vis-selected.gray {
-  /* custom colors for selected orange items */
-  background-color: rgba(144, 164, 174, 0.5);
-  border-color: rgba(102, 117, 124, 0.5);
+  background-color: rgb(156, 180, 189);
+  border-color: rgb(119, 138, 143);
 }
 
 .vis-panel.vis-center,

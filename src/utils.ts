@@ -1,6 +1,5 @@
-// Filename: utils.ts
-import type { TFile, MetadataCache, DataAdapter } from 'obsidian';
-import { getAllTags } from 'obsidian';
+import type {DataAdapter, MetadataCache, TFile} from 'obsidian';
+import {getAllTags} from 'obsidian';
 
 export function parseTag(tag: string, tagList: string[]) {
 	tag = tag.trim();
