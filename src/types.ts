@@ -2,6 +2,7 @@
 export interface TimelinesSettings {
 	timelineTag: string;
 	sortDirection: boolean;
+	notePreviewOnHover: boolean;
 }
 
 export interface TimelineArgs {

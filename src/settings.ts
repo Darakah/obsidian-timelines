@@ -37,5 +37,16 @@ export class TimelinesSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				});
 			})
+
+		new Setting(containerEl)
+			.setName("Display Note Preview On Hover")
+			.setDesc("When enabled, linked notes will display as a pop up when hovering over an event in the timeline.")
+			.addToggle((toggle) => {
+				toggle.setValue(this.plugin.settings.notePreviewOnHover);
+				toggle.onChange(async (value) => {
+					this.plugin.settings.notePreviewOnHover = value;
+					await this.plugin.saveSettings();
+				});
+			})
 	}
 }

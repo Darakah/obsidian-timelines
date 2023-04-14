@@ -210,6 +210,13 @@ div.vis-item-overflow > div > a {
   padding: 6px;
 }
 
+div.vis-item-content > a:hover,
+div.vis-item-overflow > div > a:hover {
+  -webkit-text-fill-color: white;
+  font-weight: bold;
+}
+
+
 .vis-item.orange {
     background-color: rgba(255, 116, 0, 0.63);
     filter: none;
@@ -256,6 +263,30 @@ div.vis-item-overflow > div > a {
   /* custom colors for selected orange items */
   background-color: rgba(255, 193, 7, 0.7);
   border-color: rgba(179, 135, 5, 0.7);
+}
+
+.vis-item.blue {
+  background-color: rgb(3, 169, 244);
+  filter: none;
+  border-color: #0277ab;
+}
+
+.vis-item.vis-selected.blue {
+  /* custom colors for selected orange items */
+  background-color: rgba(3, 169, 244, 0.5);
+  border-color: rgba(2, 119, 171, 0.5);
+}
+
+.vis-item.gray {
+  background-color: rgb(144, 164, 174);
+  filter: none;
+  border-color: #66757c;
+}
+
+.vis-item.vis-selected.gray {
+  /* custom colors for selected orange items */
+  background-color: rgba(144, 164, 174, 0.5);
+  border-color: rgba(102, 117, 124, 0.5);
 }
 
 .vis-panel.vis-center,

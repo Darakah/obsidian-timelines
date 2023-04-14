@@ -223,9 +223,11 @@ export class TimelineProcessor {
 			showTooltips: false,
 			template: function (item: any) {
 
-				let eventContainer = document.createElement('a');
-				eventContainer.addClass('internal-link');
-				eventContainer.href = item.path;
+				let eventContainer = document.createElement( settings.notePreviewOnHover ? 'a' : 'div');
+				if("href" in eventContainer) {
+					eventContainer.addClass('internal-link');
+					eventContainer.href = item.path;
+				}
 				eventContainer.setText(item.content);
 				let eventCard = eventContainer.createDiv();
 				eventCard.outerHTML = item.title;
