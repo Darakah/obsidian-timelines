@@ -65,7 +65,7 @@ tags: [timeline, test, me, now]
 
 2. The note must have all the specified tags to be included in the search. This note example above will be included in all of the following searches (assuming its timeline span info is valid): `test`, `test;me`, `test;me;now`, etc.
 
-3. The note must contain at least one timeline `span` or `div` element containing the event information, see the next sextion.
+3. The note must contain at least one timeline `span` or `div` element containing the event information, see the next section.
 
 When generating a timeline, a note will be ignored in the following cases:
 - The note does not have the `timeline` tag (the tag specified in plugin settings)
