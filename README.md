@@ -84,6 +84,46 @@ Invalid timeline events will be skipped.
 
 ### Timeline Entry
 
+There are 2 ways to register a note with the timeline: Frontmatter or HTML tags. If HTML tags are included in the note,
+they will be used. Otherwise the timeline with default to gathering data from the frontmatter.
+
+#### Method 1: Frontmatter
+
+```markdown
+---
+start-date: 2018-01-18
+end-date: 2018-03-02
+type: range
+color: blue
+tags: [timeline, personal]
+---
+```
+
+You can also include a title with `title: My Note Title`, otherwise it will use the title of the note by default.
+Color supports `orange`, `green`, `pink`, `yellow`, and is blue by default if color is not provided in the frontmatter.
+You can add any other colors you want in a CSS snippet with the following example rule:
+
+```CSS
+.vis-item.purple {
+  background-color: rgb(139, 195, 74);
+  filter: none;
+  border-color: #628934;
+}
+
+.vis-item.vis-selected.purple {
+  /* custom colors for selected orange items */
+  background-color: rgba(139, 195, 74, 0.7);
+  border-color: rgba(98, 137, 52, 0.7);
+}
+```
+
+Supported `types` are:
+- range
+- box
+- background
+
+#### Method 2: HTML
+
 A timeline entry can be created using a `<span></span>` or `<div></div>` tag, with the following attributes: 
 
 ```html

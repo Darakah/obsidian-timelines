@@ -1,8 +1,8 @@
-import type { TimelinesSettings } from './types';
-import { DEFAULT_SETTINGS } from './constants';
-import { TimelinesSettingTab } from './settings';
-import { TimelineProcessor } from './block';
-import { Plugin, MarkdownView } from 'obsidian';
+import type {TimelinesSettings} from './types';
+import {DEFAULT_SETTINGS} from './constants';
+import {TimelinesSettingTab} from './settings';
+import {TimelineProcessor} from './block';
+import {MarkdownView, Plugin} from 'obsidian';
 
 export default class TimelinesPlugin extends Plugin {
 	settings: TimelinesSettings;
