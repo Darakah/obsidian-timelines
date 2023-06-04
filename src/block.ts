@@ -103,6 +103,7 @@ export class TimelineProcessor {
 				let notePath = '/' + file.path;
 				let type = event.dataset.type ?? "box";
 				let endDate = event.dataset.end ?? null;
+				let era = event.dataset.era ?? null;
 
 				if (!timelineNotes[noteId]) {
 					timelineNotes[noteId] = [];
@@ -114,7 +115,8 @@ export class TimelineProcessor {
 						path: notePath,
 						class: noteClass,
 						type: type,
-						endDate: endDate
+						endDate: endDate,
+						era: era
 					};
 					timelineDates.push(noteId);
 				} else {
@@ -126,7 +128,8 @@ export class TimelineProcessor {
 						path: notePath,
 						class: noteClass,
 						type: type,
-						endDate: endDate
+						endDate: endDate,
+						era: era
 					};
 					// if note_id already present prepend or append to it
 					if (settings.sortDirection) {
@@ -154,7 +157,11 @@ export class TimelineProcessor {
 			// Build the timeline html element
 			for (let date of timelineDates) {
 				let noteContainer = timeline.createDiv({ cls: 'timeline-container' });
-				let noteHeader = noteContainer.createEl('h2', { text: timelineNotes[date][0].date.replace(/-0*$/g, '').replace(/-0*$/g, '').replace(/-0*$/g, '') });
+				let dateText = timelineNotes[date][0].date.replace(/-0*%/g, '').replace(/-0*$/g, '').replace(/-0*%/g, '');
+				if (timelineNotes[date][0].era) {
+					dateText = dateText.concat(' ', timelineNotes[date][0].era);
+				}
+				let noteHeader = noteContainer.createEl('h2', { text: dateText });
 				let eventContainer = noteContainer.createDiv({ cls: 'timeline-event-list', attr: { 'style': 'display: block' } });
 
 				noteHeader.addEventListener('click', event => {
