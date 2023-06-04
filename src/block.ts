@@ -161,7 +161,7 @@ export class TimelineProcessor {
 				if (timelineNotes[date][0].era) {
 					dateText = dateText.concat(' ', timelineNotes[date][0].era);
 				}
-				let noetHeader = noteContainer.createEl('h2', { text: dateText });
+				let noteHeader = noteContainer.createEl('h2', { text: dateText });
 				let eventContainer = noteContainer.createDiv({ cls: 'timeline-event-list', attr: { 'style': 'display: block' } });
 
 				noteHeader.addEventListener('click', event => {
