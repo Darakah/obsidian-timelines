@@ -1,106 +1,125 @@
 # obsidian Timelines
-![GitHub release)](https://img.shields.io/github/v/release/Darakah/obsidian-timelines)
-![GitHub all releases](https://img.shields.io/github/downloads/Darakah/obsidian-timelines/total)
-
 Generate a chronological timeline of all notes with the specified set of tags. 
 
-## Example - Vertical Timeline
+## Examples
+
+#### Timeline with interpretation (1 row)
+
+![[exp_0_interp_demon_1.png]]
+
+#### Timeline with interpretation (2 rows)
+
+![[exp_0_interp_demon_2.png]]
+
+
+#### Vertical Timeline
+
 ![example](https://raw.githubusercontent.com/Darakah/obsidian-timelines/main/images/exp_2.png)
 
-## Example - Horizantal Timeline
-![example](https://raw.githubusercontent.com/Darakah/obsidian-timelines/main/images/TimelineVis.png)
+#### Horizantal Timeline
 
-## Inserting a Timeline
+![example](https://raw.githubusercontent.com/Darakah/obsidian-timelines/main/images/TimelineVis.png)
+## Inserting a Timeline Event
 
 VIDEO BRIEF EXAMPLE: https://www.youtube.com/watch?v=_gtpZDXWcrM
 
-To render a timeline in a note: 
+VAULT FROM THE EXAMPLE TO QUICLY START TIMELINE WITH INTERPRETATIONS: https://drive.google.com/drive/folders/1odAg1VX4Ai8zlBmSafRueZ4AJhTUvkKc?usp=share_link
 
-1. Add the `timeline` tag to the note, either in the YAML frontmatter or somewhere else.
-2. Create a `timeline` code block or a timeline HTML comment for static rendering.
+1. Add the `timeline` tag to the note, either in the YAML frontmatter or somewhere else (a note without a timeline tag is ignored when building a timeline).
+2. or a timeline HTML comment for static rendering.
 
 ### Using a Timeline code block for dynamic rendering
 
-Create the following code block where a timeline is to be inserted:
+Create the following code block where a timeline is to be inserted using: `timeline` or `timeline-vis` or `timeline-with-interpretations`
 
 ![example](https://raw.githubusercontent.com/Darakah/obsidian-timelines/main/images/example_1.png)
 
-You can also have an horizontal timeline by:
+the render block takes a single input which is the list of tags by which to filter timeline tagged notes (e.g. in the above example block, ONLY notes with all three tags `timeline`, `test` and `now`). this can be used to filter battles only with a note tagged `timeline` and `war` for example or birthdays using `timeline` and `birthday` for the single input.
 
-1. Replacing `timeline` with `timeline-vis` in the code block,
-2. Add bellow filters:
-```timeline-vis
-tags=test
-startDate=1700
-endDate=2030
-fivHeight=600
-minDate=200
+### Using a Timeline inline code block for static rendering
+
+Using an HTML code block, insert the following HTML comment where a statically rendered timeline should be inserted:
 ```
-
-The render block takes a single input which is the list of tags by which to filter timeline tagged notes (e.g. in the above example block, ONLY notes with all three tags `timeline`, `test` and `now`).
-
-### Using an HTML code block for static rendering
-
-Insert the following HTML comment where a statically rendered timeline should be inserted:
-
-```html
 <!--TIMELINE BEGIN tags='test;now'--><!--TIMELINE END-->
 ```
+(this is rendering notes that have both tags: test, now appiled to it)
 
-Use the `Timelines: Render Timeline` command to generate a timeline statically. Running the command again will replace everything between the two comments (BEGIN/END) with a freshly rendered timeline. 
-
-Timeline event changes will not be detected using this method, but as it is creating static HTML, the generated content will work be readable without Obsidian (on GitHub, via Obsidian publish, etc.).
+Use the Timelines: Render Timeline command to generate a timeline statically. Running the command again will replace everything between the two comments (BEGIN/END) with a freshly rendered timeline. Changes will not be detected using this method, but as it is creating static HTML, the generated content will work and readable without Obsidian.
 
 ## Timeline Tagging a note
 
-For a note to be included in a timeline the following must be valid:
-
-1. The `timeline` tag must be included in that note
-
-```html
----
-tags: [timeline, test, me, now]
----
-```
-
-2. The note must have all the specified tags to be included in the search. This note example above will be included in all of the following searches (assuming its timeline span info is valid): `test`, `test;me`, `test;me;now`, etc.
-
-3. The note must contain at least one timeline `span` or `div` element containing the event information, see the next section.
-
-When generating a timeline, a note will be ignored in the following cases:
-- The note does not have the `timeline` tag (the tag specified in plugin settings)
-- The note does not contain all the tags from the search list
-- The note does not contain any valid timeline span/div elements
+The note will be ignored in the following cases:
+- no `timeline` tag (or the modified tag from the settings)
+- Note does not contain all the tags from the search list
+- No timeline `<span>` or `<div>` info block, or frontmatter(YAML) to pull from
+- The used date is not VALID, must be in the following format YEAR-MONTH-DAY-MINUTES (check info section below for more details)
 
 ## Timeline Event Properties
 
 Timeline events must specify the following: 
-- a valid date, YEAR-MONTH-DAY-MINUTES (check info section below for more details)
+- a valid date, YEAR-MONTH-DAY-HOURS:MINUTES (check info section below for more details)
 - a valid class, specifically `ob-timelines` must be specified.
-
 All other fields are optional.
-
 Invalid timeline events will be skipped.
 
 ### Timeline Entry
+
+There are 2 ways to register a note with the timeline: Frontmatter or HTML tags. If HTML tags are included in the note,
+they will be used. Otherwise the timeline with default to gathering data from the frontmatter.
+
+#### Method 1: Frontmatter
+
+```markdown
+---
+start-date: 2018-01-18
+end-date: 2018-03-02
+type: range
+color: blue(defalult if not provided) 
+tags: [timeline, personal]
+title: My Note Title(otherwise uses the title of the note by default)
+description: (can be used to add subtext under the title)
+---
+```
+![example](https://raw.githubusercontent.com/ReconVirus/obsidian-timelines/main/images/Colors.png)
+Color supports `green`, `gray`, `orange`, `pink`, `purple`,`red`, `yellow`, `white`, and blue by default if color is not provided in the frontmatter.
+You can add any other colors you want in a CSS snippet with the following example rule:
+
+```CSS
+.vis-item.purple {
+  background-color: rgb(139, 195, 74);
+  filter: none;
+  border-color: #628934;
+}
+.vis-item.vis-selected.purple {
+  /* custom colors for selected orange items */
+  background-color: rgba(139, 195, 74, 0.7);
+  border-color: rgba(98, 137, 52, 0.7);
+}
+```
+
+Supported `types` are:
+- range
+- box
+- background
+- point
+
+#### Method 2: HTML
 
 A timeline entry can be created using a `<span></span>` or `<div></div>` tag, with the following attributes: 
 
 ```html
 <span 
 	  class='ob-timelines' 
-	  data-date='2000-10-10-00' 
+	  data-date='2000-10-10' 
 	  data-title='Another Event' 
 	  data-class='orange' 
 	  data-img = 'Timeline Example/Timeline_2.jpg' 
 	  data-type='range' 
-	  data-end='2000-10-20-00'> 
-	A second event!
+	  data-end='2000-10-20'> 
+	A second event! (this would be used as the description for the timeline event card)
 </span>
 ```
-
 Timeline span and div entries (.ob-timelines class) are hidden in preview by default, however, if you wish to display content, try a snippet like this: 
-
 ```css
 /* Render the ob-timelines span or div elements as inline blocks that use an italic font */
 .ob-timelines {
@@ -114,41 +133,54 @@ Timeline span and div entries (.ob-timelines class) are hidden in preview by def
   font-weight: 500;
 }
 ```
-
 Using the above snippet, a span like this: 
-
 ```html
-<span class='ob-timelines' data-date='1499-03-28-00' data-title="An example"></span>
+<span class='ob-timelines' data-date='1499-03-28' data-title="An example"></span>
 ```
-
 would be rendered as: 
-
 <img width="228" alt="image" src="https://user-images.githubusercontent.com/808713/159139934-e5c7cb5a-da31-4a57-8100-946f944010a3.png">
 
+## Interpretations
 
-#### Dates
+Interpretions are created in separate notes. To create an interjection to an event already described correctly in another article, you should:
+1) Create a note for interpretation
+2) Add tags to the beginning of the note 
+```Markdown
+---
+Tags: timeline, pr-lang
+---
+```
+3) Add span or div tag to this note
+```HTML
+<span 
+   class='ob-timelines-interpretation' 
+   data-date='2004-01-02-12:55' 
+   data-event_title='Event_title' 
+   data-class='pr-lang' 
+   data-interpretation_number='3'
+   data-title='Interpretation_title'
+   > 
+</span>
+```
 
-The most important and essential info for the timeline entry is the date. Timeline entries can be used for fantasy timelines, leading to a simplified set of rules for valid dates.
+### Timeline with interpretations settings
+- You can customize the display for yourself.
+![[Timeline with interpretations settings.png]]
 
-A valid date is specified as `YEAR-MONTH-DAY-HOUR`.
+## Timeline Span block
+- Hidden in preview by default in order to keep the note clean
 
-- All four segments must be present.
-- Each segment can contain only numbers, but can be any length.
-- The YEAR (first segment) can be negative: `-123-45-678-9` is a valid date.
+### Date
+- The most important and essential info, if it is not valid the note will be ignored
 
-Rightmost-segments containing only zeros will be omitted when the timeline is generated, for example: 
-
-- `2300-02-00-00` will display as `2300-02`
-- `2300-00-00-00` will display as `2300`
-
-##### Event sorting
-
-Event sorting is performed by converting the date into a number. For fantasy calendars, you may need to pad months, days, or hours with zeros to ensure sorting works properly. 
-
-- `2300-02-00-00` is sorted as `2300020000`
-- `-234-02-00-00` is sorted as `-234020000`
-
-For statically generated timelines, events that occur at the same time are grouped, and are either prepended or appended to a list based on your timeline sorting preference.
+- Valid date format: 
+  - `YEAR-MONTH-DAY-HOURS:MINUTES` or `YEAR-MONTH-DAY` or `-YEAR-MONTH-DAY-HOURS:MINUTES` or `-YEAR-MONTH-DAY`
+  - Here, the YEAR in front of which the `-` symbol stands will be interpreted as the YEAR of BC, and without a sign the YEAR will be integrated as AD
+  - YEAR may range from -9999 to 9999 for example `-1234`
+  - MONTH may range from 01 to 12 for example `05`
+  - DAY and HOUR and MINUTES may range from 00 to 99 for example
+  - Exemples: `2004-04-02-13:40` or `2004-04-02` or `-2004-04-02-13:40` or `-2004-04-02`
+  - **if your input time is not valid the plugin will not check that**
 
 ### Title:
   - Optional
@@ -161,21 +193,49 @@ For statically generated timelines, events that occur at the same time are group
 ### Background Image:
   - Optional
   - If an image is not specified no image will be shown (just text)
-  - If an invalid url is given, an empty black section will be seen for that note card
-  - Currently only `http` & `absolute local path` will render. Obsidian release `v0.10.13` blocked obsidian links for background images. 
+  - If an invalid url is given (an empty black section will be seen for that note card)
+  - Currently only `http` & `absolute local path` will render, in the current obsidian release of `v0.10.13` obsidian links for background images are blocked from rendering, hopefully it is promised that this will be removed in the upcuming release. 
 
 ### CSS Class:
   - Optional
-  - Adds the applied css class to the note card associated with the timeline entry
+  - Adds the applied css class to the note card associated with this span info block
+
+## Timeline Interpretation Span block
+- Hidden in preview by default in order to keep the note clean
+
+### Date
+- The date of the event should coincide with the date of the interpretation, and in general the rules are the same
+
+### Event_title
+- The name of the event for which this note is interpretation. That is, the Title in event should present the Event-title in interpretation
+
+### interpretation_number
+- Whole chili. They collectively determine the order of interpretation
+
+### Title
+  - Optional
+  - if the title is not present, it is assumed that `Interpretation №{interpretation_number}`
 
 ## Release Notes
 
+### V0.4.0
+- Adding timeline with interpretations
+
+### V0.3.7
+- Description from frontmatter
+  - change description key in settings
+### V0.3.6
+- Era Suffix suppoty
+  - Custom in settings, clean up Readme
+
+### v0.3.5
+- frontmatter support
+- era suffix
+
 ### v0.2.1 
 - Remove escaping of `quotes / double quotes and ticks` from title and text (no longer needed)
-- Additional optional span attribute `css class` allowing to customize each card of the timeline
+- Additional optional span attrictute `css class` allowing to custumize each card of the timeline
 - `Multiple Events per note` are now allowed. All spans on a single note will be displayed on the timeline (previously only first span was presented i.e. 1 card event per note)
-
-PR Contribution by https://github.com/ebullient
 
 ### v0.2.0
 - Added `timeline` render block:
@@ -185,12 +245,3 @@ PR Contribution by https://github.com/ebullient
 - Tags searched will include both `inline` & `YAML` tags
 
 - Removed the `Add Timeline` command as it is no longer needed with the addition of the render block
-
-## Licence
-
-Licenced under the MIT License.
-
-## Support
-
-[![Github Sponsorship](https://raw.githubusercontent.com/Darakah/Darakah/e0fe245eaef23cb4a5f19fe9a09a9df0c0cdc8e1/icons/github_sponsor_btn.svg)](https://github.com/sponsors/Darakah) [<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="BuyMeACoffee" width="100">](https://www.buymeacoffee.com/darakah)
-
