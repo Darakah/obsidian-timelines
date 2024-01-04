@@ -5,11 +5,11 @@ Generate a chronological timeline of all notes with the specified set of tags.
 
 #### Timeline with interpretation (1 row)
 
-![[exp_0_interp_demon_1.png]]
+![exemple](https://raw.githubusercontent.com/MansurYa/obsidian-timeline-with-interpretations/main/images/exp_0_interp_demon_1.png)
 
 #### Timeline with interpretation (2 rows)
 
-![[exp_0_interp_demon_2.png]]
+![example](https://raw.githubusercontent.com/MansurYa/obsidian-timeline-with-interpretations/main/images/exp_0_interp_demon_2.png)
 
 
 #### Vertical Timeline
@@ -165,7 +165,7 @@ Tags: timeline, pr-lang
 
 ### Timeline with interpretations settings
 - You can customize the display for yourself.
-![[Timeline with interpretations settings.png]]
+![Timeline with interpretations settings](https://raw.githubusercontent.com/MansurYa/obsidian-timeline-with-interpretations/main/images/Timeline%20with%20interpretations%20settings.png)
 
 ## Timeline Span block
 - Hidden in preview by default in order to keep the note clean
