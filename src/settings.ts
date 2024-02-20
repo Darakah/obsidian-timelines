@@ -154,7 +154,7 @@ export class TimelinesSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName("Max Number Of Rows In blocks")
-			.setDesc("Max number of rows in blocks with intapritations for one even. The default value is 2.")
+			.setDesc("Max number of rows in blocks with intapritations for one even. The default value is 1.")
 			.addSlider((slider) => slider
 				.setLimits(1, 10, 1)
 				.setValue(this.plugin.settings.maxNumberOfRowsInblocks).setDynamicTooltip().onChange(async (value) => {

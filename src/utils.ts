@@ -1,4 +1,4 @@
-import { count } from 'console';
+import { match } from 'assert';
 import type {DataAdapter, MetadataCache, TFile} from 'obsidian';
 import {getAllTags} from 'obsidian';
 
@@ -136,19 +136,8 @@ export function getInterpretaionText(file: TFile): string{
 	return readedFile.join('\n');
 }
 
-export function replaceEnhancedMarkdownSyntax(text: string): string {
-    const regex = /(\!\[(.*?)\]\((.*?)\)|\[(.*?)\]\[(.*?)\]|\[([^\]]*?)\]\(([^\)]*?)\)|```([^\n]+)\n([^\n]+)```|`([^`]+)`|\*\*([^\*]+)\*\*|__([^_]+)__|\*([^\*]+)\*|_([^_]+)_|~~([^~]+)~~|#+|---\n([^\n]+)\n---|\[([^\]]+?)\]:\s*([^\n]+)|<([^>]+)>)/g;
+export function replaceEnhancedMarkdownSyntax(text: string): string {	
+	text = text.replace(/---[^]+?---/gs, '').replace(/<[^]+?>/gs, '').replace(/(```)/g, '').replace(/(\*\*(.+?)\*\*|__(.+?)__|`(.+?)`|\*(.+?)\*|_(.+?)_|\~\~(.+?)\~\~)/g, (match, p1, p2, p3, p4, p5, p6, p7) => p2 || p3 || p4 || p5 || p6 || p7).replace(/^(#{1,6})\s(.*)$/gm, (match, p1, p2) => p2).replace(/^\s*[\r\n]+|[\r\n]+\s*$/gm, '');
   
-	function replaceMatch(match: string, p1: string, p2: string, p3: string, p4: string, p5: string, p6: string, p7: string, p8: string, p9: string, p10: string, p11: string, p12: string, p13: string, p14: string, p15: string, p16: string, p17: string, p18: string, p19: string, p20: string, p21: string) {
-    
-        if (p1 === '#' || p1 === '##' || p1 === '###' || p1 === '####' || p1 === '#####' || p1 === '######' || p18 || p16 || p20 || p21) return "";
-
-        if (p1 || p4 || p6 || p8 || p9 || p11 || p12 || p13 || p14 || p15 || p10) return p2 || p4 || p6 || p7 || p9 || p11 || p12 || p13 || p14 || p15 || p10;
-	    
-        if (p15) return "    ";
-
-        return "";
-	}
-  
-	return text.replace(regex, replaceMatch).replace(/^\s*[\r\n]/gm, '');
+	return text;
 }

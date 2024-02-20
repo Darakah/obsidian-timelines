@@ -513,9 +513,9 @@ function addFrontmatterInterpretationsData(frontmatter: FrontMatterCache | null,
 
 	const startDate = interp.dataset.date ?? '';
 	const eventTitle = interp.dataset.event_title ?? '';
-	const interpretationTitle = interp.dataset.title ?? findMatchingFrontmatterKey(frontmatter, frontmatterKeys.titleKey) ?? '';
-	const noteClass = interp.dataset.class ?? frontmatter["color"] ?? '';
 	const interpretationNumber = Number(interp.dataset.interpretation_number) ?? 0;
+	const interpretationTitle = interp.dataset.title ?? `Interpretation №{interpretationNumber}`;
+	const noteClass = interp.dataset.class ?? frontmatter["color"] ?? '';
 
 	let [successTime, noteId] = getFrontmatterTime(startDate);
 	

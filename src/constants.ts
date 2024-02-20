@@ -25,7 +25,7 @@ export const DEFAULT_SETTINGS: TimelinesSettings = {
 	minCardWidth: 180,
 	cardHeight: 290,
 	coefficentCompressionOfBlocks: 0.4,
-	maxNumberOfRowsInblocks: 2,
+	maxNumberOfRowsInblocks: 1,
 }
 
 export interface Args {
