@@ -23,7 +23,7 @@ Generate a chronological timeline of all notes with the specified set of tags.
 
 VIDEO BRIEF EXAMPLE: https://www.youtube.com/watch?v=_gtpZDXWcrM
 
-VAULT FROM THE EXAMPLE TO QUICLY START TIMELINE WITH INTERPRETATIONS: https://drive.google.com/drive/folders/1odAg1VX4Ai8zlBmSafRueZ4AJhTUvkKc?usp=share_link
+VAULT FROM THE EXAMPLE TO QUICLY START TIMELINE WITH INTERPRETATIONS: https://github.com/MansurYa/Obsidian-vault-dementation-storage-plugin-timelines-with-interpretation
 
 1. Add the `timeline` tag to the note, either in the YAML frontmatter or somewhere else (a note without a timeline tag is ignored when building a timeline).
 2. or a timeline HTML comment for static rendering.
