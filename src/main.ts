@@ -1,8 +1,8 @@
-import type { TimelinesSettings } from './types';
-import { DEFAULT_SETTINGS } from './constants';
-import { TimelinesSettingTab } from './settings';
-import { TimelineProcessor } from './block';
-import { Plugin, MarkdownView } from 'obsidian';
+import type {TimelinesSettings} from './types';
+import {DEFAULT_SETTINGS} from './constants';
+import {TimelinesSettingTab} from './settings';
+import {TimelineProcessor} from './block';
+import {MarkdownView, Plugin} from 'obsidian';
 
 export default class TimelinesPlugin extends Plugin {
 	settings: TimelinesSettings;
@@ -10,18 +10,23 @@ export default class TimelinesPlugin extends Plugin {
 	async onload() {
 		// Load message
 		await this.loadSettings();
-		console.log('Loaded Timelines Plugin');
+		console.log('Loaded Timelines Plugin Test');
 
 		// Register timeline block renderer
 		this.registerMarkdownCodeBlockProcessor('timeline', async (source, el, ctx) => {
 			const proc = new TimelineProcessor();
-			await proc.run(source, el, this.settings, this.app.vault.getMarkdownFiles(), this.app.metadataCache, this.app.vault, false);
+			await proc.run(source, el, this.settings, this.app.vault.getMarkdownFiles(), this.app.metadataCache, this.app.vault, 0);
 		});
 
 		// Register vis-timeline block renderer
 		this.registerMarkdownCodeBlockProcessor('timeline-vis', async (source, el, ctx) => {
 			const proc = new TimelineProcessor();
-			await proc.run(source, el, this.settings, this.app.vault.getMarkdownFiles(), this.app.metadataCache, this.app.vault, true);
+			await proc.run(source, el, this.settings, this.app.vault.getMarkdownFiles(), this.app.metadataCache, this.app.vault, 1);
+		});
+
+		this.registerMarkdownCodeBlockProcessor('timeline-with-interpretations', async (source, el, ctx) => {
+			const proc = new TimelineProcessor();
+			await proc.run(source, el, this.settings, this.app.vault.getMarkdownFiles(), this.app.metadataCache, this.app.vault, 2);
 		});
 
 		this.addCommand({
